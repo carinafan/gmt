@@ -1,0 +1,56 @@
+---
+title: "GMT Online Games -- Data Cleaning"
+author: "Carina Fan"  
+date: "Last updated: `r format(Sys.time(), '%B %d, %Y')`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r packages}
+library(lubridate)
+library(readxl)
+library(writexl)
+library(magrittr)
+library(tidyverse)
+```
+
+```{r data}
+sheet_names = excel_sheets("../data/iago/event_clean.xlsx")
+
+all_data = sheet_names %>%
+  lapply(read_excel, path = "../data/iago/event_clean.xlsx")
+
+names(all_data) = sheet_names
+
+all_data %>%
+  list2env(.GlobalEnv)
+```
+
+
+<!-- ======================================================================= -->
+
+
+
+
+<!-- ======================================================================= -->
+
+
+<!-- Data dictionaries -->
+
+
+<!-- ======================================================================= -->
+
+
+# Export data
+
+
+<!-- ======================================================================= -->
+
+
+# Session info
+
+```{r session_info, include = TRUE}
+sessionInfo()
+```
