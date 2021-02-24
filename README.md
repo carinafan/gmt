@@ -1,2 +1,5 @@
-# gmt
-Data cleaning for Goal Management Training online game development. 
+# GMT data cleaning
+
+## Directory list
+
+*cleaning* - data cleaning scripts
