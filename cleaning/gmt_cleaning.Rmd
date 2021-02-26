@@ -20,7 +20,8 @@ library(tidyverse)
 df_to_keep = c(
   "df_to_keep",
   "df_fruit1", "dict_fruit1",
-  "df_fruit2", "dict_fruit2"
+  "df_fruit2", "dict_fruit2",
+  "df_fruit3", "dict_fruit3"
 )
 ```
 
@@ -33,6 +34,7 @@ df_to_keep = c(
 ```{r}
 source("fruit1.R")
 source("fruit2.R")
+source("fruit3.R")
 ```
 
 
@@ -43,13 +45,15 @@ source("fruit2.R")
 
 ```{r export_data}
 list(fruit1 = df_fruit1,
-     fruit2 = df_fruit2) %>% 
+     fruit2 = df_fruit2,
+     fruit3 = df_fruit3) %>% 
   write_xlsx("../data/gmt_clean.xlsx")
 ```
 
 ```{r export_dict}
 list(fruit1 = dict_fruit1,
-     fruit2 = dict_fruit2) %>% 
+     fruit2 = dict_fruit2,
+     fruit3 = dict_fruit3) %>% 
   write_xlsx("../data/gmt_dictionary.xlsx")
 ```
 
