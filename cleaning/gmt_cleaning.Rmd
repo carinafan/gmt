@@ -1,11 +1,9 @@
 ---
 title: "GMT Online Games -- Data Cleaning"
-author: "Carina Fan"  
 date: "Last updated: `r format(Sys.time(), '%B %d, %Y')`"
 output: 
-  html_document:
+  github_document:
     toc: true
-    toc_float: true
 ---
 
 ```{r packages}
