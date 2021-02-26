@@ -34,6 +34,7 @@ started %<>% append(nrow(df_raw))
 # set up empty dataframe
 df = data.frame(matrix(data = NA, nrow = n, ncol = length(names)))
 names(df) = names
+df$date %<>% ymd()
 
 #---- pull data ----
 
@@ -99,10 +100,12 @@ for (i in 1:n) {
   
 }
 
-#---- clean up ----
+#---- export clean data ----
 
 df %>% 
   write.xlsx("../data/gmt_clean.xlsx",
              sheetName = "fruit1",
              row.names = FALSE,
              append = TRUE)
+
+
