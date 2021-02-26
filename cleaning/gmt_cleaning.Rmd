@@ -11,39 +11,26 @@ output:
 ```{r packages}
 library(lubridate)
 library(readxl)
-library(writexl)
+library(xlsx)
 library(magrittr)
 library(tidyverse)
-```
-
-```{r data}
-sheet_names = excel_sheets("../data/iago/event_clean.xlsx")
-
-all_data = sheet_names %>%
-  lapply(read_excel, path = "../data/iago/event_clean.xlsx")
-
-names(all_data) = sheet_names
-
-all_data %>%
-  list2env(.GlobalEnv)
 ```
 
 
 <!-- ======================================================================= -->
 
 
+# Fruit Clapping Task
+
+```{r}
+source("fruit1.R")
+```
 
 
 <!-- ======================================================================= -->
 
 
 <!-- Data dictionaries -->
-
-
-<!-- ======================================================================= -->
-
-
-# Export data
 
 
 <!-- ======================================================================= -->
