@@ -4,7 +4,7 @@
 
 rm(list=ls())
 
-# load datat
+# load data
 df_raw = read_excel("../data/iago/event_clean.xlsx",
                     sheet = "Fruit Task 1") %>% 
   as.data.frame()

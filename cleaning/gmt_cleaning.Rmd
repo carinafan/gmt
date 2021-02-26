@@ -20,7 +20,7 @@ library(tidyverse)
 <!-- ======================================================================= -->
 
 
-# Fruit Clapping Task
+# Fruit Clapping Tasks
 
 ```{r}
 source("fruit1.R")
