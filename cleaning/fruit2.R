@@ -1,10 +1,10 @@
-# Fruit Clapping Task 1 
+# Fruit Clapping Task 2 
 
 #---- set up ----
 
 # load data
 df_raw = read_excel("../data/iago/event_clean.xlsx",
-                    sheet = "Fruit Task 1") %>% 
+                    sheet = "Fruit Task 2") %>% 
   as.data.frame()
 
 # set column names
@@ -111,13 +111,13 @@ dict$value_range = NA
 # fill in dictionary
 for (i in 1:nrow(dict)) {
   switch(dict$column_label[i],
-
+         
          "user_id" = {
            dict$description[i] = "user ID"
            dict$type[i] = "ID number"
            dict$value_range[i] = "NA"
          },
-
+         
          "date" = {
            dict$description[i] = "date (yyyy-mm-dd)"
            dict$type[i] = "date"
@@ -153,13 +153,13 @@ for (i in 1:nrow(dict)) {
            dict$type[i] = "integer"
            dict$value_range[i] = "0 to 8"
          }
-
-         )
+         
+  )
 }
 
 #---- clean up ----
 
-df_fruit1 = df
-dict_fruit1 = dict
+df_fruit2 = df
+dict_fruit2 = dict
 
 rm(list= ls()[!(ls() %in% df_to_keep)])
