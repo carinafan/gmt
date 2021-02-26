@@ -1,6 +1,4 @@
 # Fruit Clapping Task 1 
-# this script shares a workspace with gmt_cleaning.Rmd
-# and should only be called in the conntext of that file
 
 #---- set up ----
 
@@ -108,4 +106,73 @@ df %>%
              row.names = FALSE,
              append = TRUE)
 
+#---- data dictionary ----
 
+# export column names
+dict = names(df) %>%
+  as.data.frame(stringsAsFactors = FALSE)
+names(dict) = "column_label"
+
+# add columns to describe the variables in each column
+dict$description = NA
+dict$type = NA
+dict$value_range = NA
+
+# fill in dictionary
+for (i in 1:nrow(dict)) {
+  switch(dict$column_label[i],
+
+         "user_id" = {
+           dict$description[i] = "user ID"
+           dict$type[i] = "ID number"
+           dict$value_range[i] = "NA"
+         },
+
+         "date" = {
+           dict$description[i] = "date (yyyy-mm-dd)"
+           dict$type[i] = "date"
+           dict$value_range[i] = "NA"
+         },
+         
+         "duration" = {
+           dict$description[i] = "task duration in seconds"
+           dict$type[i] = "integer"
+           dict$value_range[i] = "anything greater than 0 and probably less than 200 ish"
+         },
+         
+         "non_pears_shown" = {
+           dict$description[i] = "number of fruits (not including pears) shown"
+           dict$type[i] = "integer"
+           dict$value_range[i] = "0 to 54 (54 indicates a complete task)"
+         },
+         
+         "non_pears_correct" = {
+           dict$description[i] = "number of fruits (not included pears) responded to correctly"
+           dict$type[i] = "integer"
+           dict$value_range[i] = "0 to 54"
+         },
+         
+         "pears_shown" = {
+           dict$description[i] = "number of pears shown"
+           dict$type[i] = "integer"
+           dict$value_range[i] = "0 to 8 (8 indicates a complete task)"
+         },
+         
+         "pears_correct" = {
+           dict$description[i] = "number of pears where response was correctly withheld"
+           dict$type[i] = "integer"
+           dict$value_range[i] = "0 to 8"
+         }
+
+         )
+}
+
+dict %>% 
+  write.xlsx("../data/gmt_dictionary.xlsx",
+             sheetName = "fruit1",
+             row.names = FALSE,
+             append = TRUE)
+
+#---- clean up ----
+
+rm(list=ls())
