@@ -19,7 +19,10 @@ df_to_keep = c(
   "df_to_keep",
   "df_fruit1", "dict_fruit1",
   "df_fruit2", "dict_fruit2",
-  "df_fruit3", "dict_fruit3"
+  "df_fruit3", "dict_fruit3",
+  "df_fruit4", "dict_fruit4",
+  "df_card1", "dict_card1",
+  "df_card2", "dict_card2"
 )
 ```
 
@@ -39,19 +42,33 @@ source("fruit3.R")
 <!-- ======================================================================= -->
 
 
+# Card Sorting Tasks
+
+```{r}
+# source("card1.R")
+source("card2.R")
+```
+
+
+
+<!-- ======================================================================= -->
+
+
 # Export data
 
 ```{r export_data}
 list(fruit1 = df_fruit1,
      fruit2 = df_fruit2,
-     fruit3 = df_fruit3) %>% 
+     fruit3 = df_fruit3,
+     card2 = df_card2) %>% 
   write_xlsx("../data/gmt_clean.xlsx")
 ```
 
 ```{r export_dict}
 list(fruit1 = dict_fruit1,
      fruit2 = dict_fruit2,
-     fruit3 = dict_fruit3) %>% 
+     fruit3 = dict_fruit3,
+     card2 = dict_card2) %>% 
   write_xlsx("../data/gmt_dictionary.xlsx")
 ```
 
