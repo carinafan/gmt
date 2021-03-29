@@ -37,8 +37,40 @@ df$date %<>% ymd()
 # for each task start...
 for (i in 1:n) {
   
+  # sometimes there's a row of data before the "started" row...
+  
+  if (started[i+1] - started[i] > 1) { ## asssuming the participant has >1 row of data...
+  
+    ## check the time interval between the "started" row and the previous row
+    ## if it's 1 sec or less, pull the previous row as part of this participant's data
+    temp_start_interval = df_raw$created_at[started[i]-1] %>% 
+      interval(df_raw$created_at[started[i]]) %>% 
+      time_length("seconds") %>% 
+      abs()
+  
+    if (length(temp_start_interval) == 0 || temp_start_interval > 1) { # need to account for empty interval for 1st row
+      temp_start = started[i]
+      } else {
+      temp_start = started[i] - 1}
+  
+    ## also, check the time interval between the last 2 rows
+    ## if it's more than 10 sec, remove the last row (since it belongs to the next participant)
+    temp_end_interval = df_raw$created_at[started[i+1]-2] %>% 
+      interval(df_raw$created_at[started[i+1]-1]) %>% 
+      time_length("seconds") %>% 
+      abs()
+  
+    if (temp_end_interval > 10) {
+      temp_end = started[i+1] - 2
+    } else (temp_end = started[i+1] - 1)
+  
+  } else { # if they have just 1 row of data, just take that 1 row
+    temp_start = started[i]
+    temp_end = started[i+1] - 1
+  }
+  
   # subset participant's rows
-  range = (started[i]):(started[i+1]-1)
+  range = (temp_start:temp_end)
   raw_user_data = df_raw[range, ]
   
   # pull user ID
@@ -116,48 +148,35 @@ for (i in 1:nrow(dict)) {
            dict$value_range[i] = "anything greater than 0 and probably less than 200 ish"
          },
          
-         "non_pears_shown" = {
-           dict$description[i] = "number of fruits (not including pears) shown"
+         "fives_shown" = {
+           dict$description[i] = "number of fives shown"
            dict$type[i] = "integer"
-           dict$value_range[i] = "0 to 54 (54 indicates a complete task)"
+           dict$value_range[i] = "0 to 4 (4 indicates a complete task)"
          },
          
-         "non_pears_correct" = {
-           dict$description[i] = "number of fruits (not included pears) responded to correctly"
+         "fives_correct" = {
+           dict$description[i] = "number of fives sorted correctly"
            dict$type[i] = "integer"
-           dict$value_range[i] = "0 to 54"
+           dict$value_range[i] = "0 to 4"
          },
          
-         "pears_shown" = {
-           dict$description[i] = "number of pears shown"
+         "cards_shown" = {
+           dict$description[i] = "total number of cards (including fives) shown"
            dict$type[i] = "integer"
-           dict$value_range[i] = "0 to 8 (8 indicates a complete task)"
+           dict$value_range[i] = "0 to 52 (52 indicates a complete task)"
          },
          
-         "pears_correct" = {
-           dict$description[i] = "number of pears where response was correctly withheld"
+         "cards_correct" = {
+           dict$description[i] = "total numbers of cards (including fives) sorted correctly"
            dict$type[i] = "integer"
-           dict$value_range[i] = "0 to 8"
-         },
-         
-         "stops" = {
-           dict$description[i] = "number of stops shown"
-           dict$type[i] = "integer"
-           dict$value_range[i] = "0 to 6"
-         },
-         
-         "stop_spaces" = {
-           dict$description[i] = "number of times space was hit on stop"
-           dict$type[i] = "integer"
-           dict$value_range[i] = "0 to 6"
+           dict$value_range[i] = "0 to 52"
          }
-         
   )
 }
 
 #---- clean up ----
 
-df_fruit3 = df
-dict_fruit3 = dict
+df_card1 = df
+dict_card1 = dict
 
 rm(list= ls()[!(ls() %in% df_to_keep)])
