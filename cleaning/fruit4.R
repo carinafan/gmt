@@ -17,7 +17,10 @@ names = c(
   "pears_shown",
   "pears_correct",
   "stops",
-  "stop_ups"
+  "stop_ups",
+  "slow_stops",
+  "stop_spaces",
+  "incorrect_ups"
 )
 
 # find each task start
@@ -44,9 +47,9 @@ for (i in 1:n) {
   raw_user_data = df_raw[range, ]
   ## sometimes the task begins with "Space pressed on Stop" instead of "Started"
   ## so remove the first row of the next participant's data if that's the case
-  if (raw_user_data$tag2[nrow(raw_user_data)] == "Space pressed on Stop") {
-    raw_user_data = raw_user_data[1:nrow(raw_user_data)-1, ]
-  }
+  # if (raw_user_data$tag2[nrow(raw_user_data)] == "Space pressed on Stop") {
+  #   raw_user_data = raw_user_data[1:nrow(raw_user_data)-1, ]
+  # }
   
   # pull user ID
   temp_id = raw_user_data$user_id[1]
@@ -98,6 +101,18 @@ for (i in 1:n) {
     filter(tag2 == "Arrow pressed on Stop") %>% 
     nrow()
   
+  temp_stop_slow = raw_user_data %>% 
+    filter(tag2 == "Slow to react to Stop") %>% 
+    nrow()
+  
+  temp_stop_spaces = raw_user_data %>% 
+    filter(tag2 == "Space pressed on Stop") %>% 
+    nrow()
+  
+  temp_stop_incorrect = raw_user_data %>% 
+    filter(tag2 == "Wrong Stop") %>% 
+    nrow()
+  
   # fill in daatframe
   df$user_id[i] = temp_id
   df$date[i] = temp_date
@@ -108,6 +123,9 @@ for (i in 1:n) {
   df$pears_correct[i] = temp_pears_correct
   df$stops[i] = temp_stops
   df$stop_ups[i] = temp_stop_ups
+  df$slow_stops[i] = temp_stop_slow
+  df$stop_spaces[i] = temp_stop_spaces
+  df$incorrect_ups[i] = temp_stop_incorrect
   
 }
 
@@ -175,10 +193,28 @@ for (i in 1:nrow(dict)) {
            dict$value_range[i] = "0 to 6"
          },
          
-         "stop_spaces" = {
-           dict$description[i] = "number of times space was hit on stop"
+         "stop_ups" = {
+           dict$description[i] = "number of times up arrow was correctly hit on stop"
            dict$type[i] = "integer"
            dict$value_range[i] = "0 to 6"
+         },
+         
+         "slow_stops" = {
+           dict$description[i] = "number of slow reacts to stop"
+           dict$type[i] = "integer"
+           dict$value_range[i] = "0 to 6"
+         },
+         
+         "stop_spaces" = {
+           dict$description[i] = "number of times space was incorrectly hit on stop"
+           dict$type[i] = "integer"
+           dict$value_range[i] = "0 to 6"
+         },
+         
+         "incorrect_ups" = {
+           dict$description[i] = "number of times up arrow was hit incorrectly (i.e., not in response to stop)"
+           dict$type[i] = "integer"
+           dict$value_range[i] = "any integer greater than or equal to 0, but probably less than 6 ish"
          }
          
   )
@@ -186,7 +222,7 @@ for (i in 1:nrow(dict)) {
 
 #---- clean up ----
 
-df_fruit3 = df
-dict_fruit3 = dict
+df_fruit4 = df
+dict_fruit4 = dict
 
 rm(list= ls()[!(ls() %in% df_to_keep)])
