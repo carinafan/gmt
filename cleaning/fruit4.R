@@ -45,11 +45,20 @@ for (i in 1:n) {
   # subset participant's rows
   range = (started[i]):(started[i+1]-1)
   raw_user_data = df_raw[range, ]
-  ## sometimes the task begins with "Space pressed on Stop" instead of "Started"
-  ## so remove the first row of the next participant's data if that's the case
+  ## sometimes the task begins with 1 or more rows of "Space pressed on Stop" instead of "Started"
+  ## so remove those rows from the end of the preceding participant's data
   # if (raw_user_data$tag2[nrow(raw_user_data)] == "Space pressed on Stop") {
   #   raw_user_data = raw_user_data[1:nrow(raw_user_data)-1, ]
   # }
+  
+  for (j in 1:nrow(raw_user_data)) {
+    # if last row is "space pressed on stop"...
+    if (raw_user_data$tag2[nrow(raw_user_data)] == "Space pressed on Stop") {
+      # remove last row
+      raw_user_data = raw_user_data[-nrow(raw_user_data), ]
+    } else {break}
+    # break once all the "space pressed on stop" rows are removed
+  }
   
   # pull user ID
   temp_id = raw_user_data$user_id[1]
