@@ -55,9 +55,6 @@ for (i in 1:n) {
 
   names(temp_df) = names
 
-  # fill in task order
-  temp_df$order = seq(1:(length(switches) - 1))
-
   # fill in task data
 
   for (s in 1:(length(switches) - 1)) {
@@ -66,20 +63,35 @@ for (i in 1:n) {
     task_range = (switches[s]:(switches[s+1]-1))
     raw_task_data = raw_user_data[task_range, ]
     
+    # pull task
+    if (any(grepl("Name Sorting", raw_task_data$tag2))) {
+      task = "Name Sorting"
+    } else if (any(grepl("Card Sorting", raw_task_data$tag2))) {
+      task = "Card Sorting"
+    } else if (any(grepl("Dot to Dot", raw_task_data$tag2))) {
+      task = "Dot to Dot"
+    } else if (any(grepl("Word Search", raw_task_data$tag2))) {
+      task = "Word Search"
+    } else if (any(grepl("Spot Difference", raw_task_data$tag2))) {
+      task = "Spot Difference"
+    }
+    
     # pull duration
     task_duration = raw_task_data$created_at[1] %>%
       interval(raw_task_data$created_at[nrow(raw_task_data)]) %>%
       time_length("seconds")
 
     # fill in participant dataframe
+    temp_df$task[s] = task
     temp_df$duration[s] = task_duration
+    
+  }
 
-    }
-  
-  # fill in user ID & date
+  # fill in remaining info
   temp_df$user_id = raw_user_data$user_id[1]
   temp_df$date = raw_user_data$created_at[1] %>% 
     date()
+  temp_df$order = seq(1:(length(switches) - 1))
   
   # append participant dataframe to overall dataframe
   df %<>% rbind(temp_df)
