@@ -35,6 +35,7 @@ nice_histogram = function(dataframe, var, binwidth) {
                    fill = "hotpink3",
                    colour = "hotpink3",
                    alpha = .4) +
+    xlim(-.1, 1.1) +
     ylab("Count") +
     theme_bw()
 }
@@ -118,7 +119,6 @@ df.fruit4$pears_correct_proportion = df.fruit4$pears_correct / df.fruit4$pears_s
 df.fruit4$stop_spaces_proportion = df.fruit4$stop_spaces / df.fruit4$stops
 df.fruit4$stop_ups_proportion = df.fruit4$stop_ups / df.fruit4$stops
 df.fruit4$slow_stops_proportion = df.fruit4$slow_stops / df.fruit4$stops
-df.fruit4$false_stops_proportion = df.fruit4$incorrect_ups / df.fruit4$stops
 ```
 
 ```{r fig.show = "hold", out.width = "50%"}
@@ -143,8 +143,101 @@ df.fruit4 %>%
   xlab("Proportion of slow responses to 'Stop'")
 
 df.fruit4 %>% 
-  nice_histogram("false_stops_proportion", binwidth = .1) +
-  xlab("Proportion of incorrect up arrow responses\n(i.e., hit when 'Stop' wasn't presented)")
+  nice_histogram("incorrect_ups", binwidth = 1) +
+  xlab("Number of incorrect up arrow responses\n(i.e., hit when 'Stop' wasn't presented)") +
+  xlim(-1, 8)
+```
+
+
+<!-- ======================================================================= -->
+
+
+# Card Sorting Tasks
+
+## Card Sort 1
+
+```{r}
+df.card1 = all_data$card1
+
+df.card1$fives_correct_proportion = df.card1$fives_correct / df.card1$fives_shown
+df.card1$cards_correct_proportion = df.card1$cards_correct / df.card1$cards_shown
+```
+
+```{r fig.show = "hold", out.width = "50%"}
+df.card1 %>% 
+  nice_histogram("fives_correct_proportion", binwidth = .1) +
+  xlab("Proportion of fives sorted correctly")
+
+df.card1 %>% 
+  nice_histogram("cards_correct_proportion", binwidth = .1) +
+  xlab("Proportion of cards sorted correctly")
+```
+
+## Card Sort 2
+
+```{r}
+df.card2 = all_data$card2
+
+df.card2$fives_correct_proportion = df.card2$fives_correct / df.card2$fives_shown
+df.card2$cards_correct_proportion = df.card2$cards_correct / df.card2$cards_shown
+```
+
+```{r fig.show = "hold", out.width = "50%"}
+df.card2 %>% 
+  nice_histogram("fives_correct_proportion", binwidth = .1) +
+  xlab("Proportion of fives sorted correctly")
+
+df.card2 %>% 
+  nice_histogram("cards_correct_proportion", binwidth = .1) +
+  xlab("Proportion of cards sorted correctly")
+```
+
+## Card Sort 3
+
+```{r}
+df.card3 = all_data$card3
+
+df.card3$fives_correct_proportion = df.card3$fives_correct / df.card3$fives_shown
+df.card3$cards_correct_proportion = df.card3$cards_correct / df.card3$cards_shown
+```
+
+```{r fig.show = "hold", out.width = "50%"}
+df.card3 %>% 
+  nice_histogram("fives_correct_proportion", binwidth = .1) +
+  xlab("Proportion of fives sorted correctly")
+
+df.card3 %>% 
+  nice_histogram("cards_correct_proportion", binwidth = .1) +
+  xlab("Proportion of cards sorted correctly")
+```
+
+## Card Sort 4
+
+```{r}
+df.card4 = all_data$card4
+
+df.card4$fives_correct_proportion = df.card4$fives_correct / df.card4$fives_shown
+df.card4$cards_correct_proportion = df.card4$cards_correct / df.card4$cards_shown
+df.card4$repetitions_correct_proportion = df.card4$repetitions_heard / df.card4$repetitions_heard
+```
+
+```{r fig.show = "hold", out.width = "50%"}
+df.card4 %>% 
+  nice_histogram("fives_correct_proportion", binwidth = .1) +
+  xlab("Proportion of fives sorted correctly")
+
+df.card4 %>% 
+  nice_histogram("cards_correct_proportion", binwidth = .1) +
+  xlab("Proportion of cards sorted correctly")
+
+df.card4 %>% 
+  nice_histogram("repetitions_correct_proportion", binwidth = .1) +
+  xlab("Proportion of repetitions correctly responded to")
+
+df.card4 %>% 
+  nice_histogram("ups_incorrect", binwidth = 1) +
+  xlab("Number of incorrect up arrow responses\n(i.e., hit when repetition wasn't presented)") +
+  xlim(-1, 8)
 ```
 
 
