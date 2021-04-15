@@ -1,0 +1,158 @@
+---
+title: "GMT Online Games — Data Descriptives"
+author: "Carina Fan"  
+date: "Last updated: `r format(Sys.time(), '%B %d, %Y')`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r chunk_options, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+```{r packages}
+library(readxl)
+library(magrittr)
+library(tidyverse)
+```
+
+```{r data}
+path = "../data/gmt_clean.xlsx"
+
+all_data = excel_sheets(path) %>% 
+  lapply(read_excel, path = path)
+
+names(all_data) = excel_sheets(path)
+```
+
+```{r functions}
+nice_histogram = function(dataframe, var, binwidth) {
+  dataframe %>% 
+    ggplot(aes_string(x = var)) +
+    geom_histogram(binwidth = binwidth,
+                   fill = "hotpink3",
+                   colour = "hotpink3",
+                   alpha = .4) +
+    ylab("Count") +
+    theme_bw()
+}
+```
+
+
+<!-- ======================================================================= -->
+
+
+# Fruit Tasks
+ 
+## Fruit Task 1
+
+```{r}
+df.fruit1 = all_data$fruit1
+
+df.fruit1$non_pears_correct_proportion = df.fruit1$non_pears_correct / df.fruit1$non_pears_shown
+df.fruit1$pears_correct_proportion = df.fruit1$pears_correct / df.fruit1$pears_shown
+```
+
+```{r fig.show = "hold", out.width = "50%"}
+df.fruit1 %>% 
+  nice_histogram("pears_correct_proportion", binwidth = .1) +
+  xlab("Proportion of pears correct")
+
+df.fruit1 %>% 
+  nice_histogram("non_pears_correct_proportion", binwidth = .1) +
+  xlab("Proportion of non-pears correct")
+```
+
+## Fruit Task 2
+
+```{r}
+df.fruit2 = all_data$fruit2
+
+df.fruit2$non_pears_correct_proportion = df.fruit2$non_pears_correct / df.fruit2$non_pears_shown
+df.fruit2$pears_correct_proportion = df.fruit2$pears_correct / df.fruit2$pears_shown
+```
+
+```{r fig.show = "hold", out.width = "50%"}
+df.fruit2 %>% 
+  nice_histogram("pears_correct_proportion", binwidth = .1) +
+  xlab("Proportion of pears correct")
+
+df.fruit2 %>% 
+  nice_histogram("non_pears_correct_proportion", binwidth = .1) +
+  xlab("Proportion of non-pears correct")
+```
+
+## Fruit Task 3 
+
+```{r}
+df.fruit3 = all_data$fruit3
+
+df.fruit3$non_pears_correct_proportion = df.fruit3$non_pears_correct / df.fruit3$non_pears_shown
+df.fruit3$pears_correct_proportion = df.fruit3$pears_correct / df.fruit3$pears_shown
+df.fruit3$stop_spaces_proportion = df.fruit3$stop_spaces / df.fruit3$stops
+```
+
+```{r fig.show = "hold", out.width = "50%"}
+df.fruit3 %>% 
+  nice_histogram("pears_correct_proportion", binwidth = .1) +
+  xlab("Proportion of pears correct")
+
+df.fruit3 %>% 
+  nice_histogram("non_pears_correct_proportion", binwidth = .1) +
+  xlab("Proportion of non-pears correct")
+
+df.fruit3 %>% 
+  nice_histogram("stop_spaces_proportion", binwidth = .1) +
+  xlab("Proportion of (incorrect) space bar responses to 'Stop'")
+```
+
+## Fruit Task 4 
+
+```{r}
+df.fruit4 = all_data$fruit4
+
+df.fruit4$non_pears_correct_proportion = df.fruit4$non_pears_correct / df.fruit4$non_pears_shown
+df.fruit4$pears_correct_proportion = df.fruit4$pears_correct / df.fruit4$pears_shown
+df.fruit4$stop_spaces_proportion = df.fruit4$stop_spaces / df.fruit4$stops
+df.fruit4$stop_ups_proportion = df.fruit4$stop_ups / df.fruit4$stops
+df.fruit4$slow_stops_proportion = df.fruit4$slow_stops / df.fruit4$stops
+df.fruit4$false_stops_proportion = df.fruit4$incorrect_ups / df.fruit4$stops
+```
+
+```{r fig.show = "hold", out.width = "50%"}
+df.fruit4 %>% 
+  nice_histogram("pears_correct_proportion", binwidth = .1) +
+  xlab("Proportion of pears correct")
+
+df.fruit4 %>% 
+  nice_histogram("non_pears_correct_proportion", binwidth = .1) +
+  xlab("Proportion of non-pears correct")
+
+df.fruit4 %>% 
+  nice_histogram("stop_spaces_proportion", binwidth = .1) +
+  xlab("Proportion of (incorrect) space bar responses to 'Stop'")
+
+df.fruit4 %>% 
+  nice_histogram("stop_ups_proportion", binwidth = .1) +
+  xlab("Proportion of correct up arrow responses to 'Stop'")
+
+df.fruit4 %>% 
+  nice_histogram("slow_stops_proportion", binwidth = .1) +
+  xlab("Proportion of slow responses to 'Stop'")
+
+df.fruit4 %>% 
+  nice_histogram("false_stops_proportion", binwidth = .1) +
+  xlab("Proportion of incorrect up arrow responses\n(i.e., hit when 'Stop' wasn't presented)")
+```
+
+
+<!-- ======================================================================= -->
+
+
+# Session info
+
+```{r session_info, include = TRUE}
+sessionInfo()
+```
