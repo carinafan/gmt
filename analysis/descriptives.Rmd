@@ -13,6 +13,7 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 ```
 
 ```{r packages}
+library(psych)
 library(readxl)
 library(magrittr)
 library(tidyverse)
@@ -56,6 +57,10 @@ df.fruit1$non_pears_correct_proportion = df.fruit1$non_pears_correct / df.fruit1
 df.fruit1$pears_correct_proportion = df.fruit1$pears_correct / df.fruit1$pears_shown
 ```
 
+```{r}
+describe(df.fruit1)
+```
+
 ```{r fig.show = "hold", out.width = "50%"}
 df.fruit1 %>% 
   nice_histogram("pears_correct_proportion", binwidth = .1) +
@@ -73,6 +78,10 @@ df.fruit2 = all_data$fruit2
 
 df.fruit2$non_pears_correct_proportion = df.fruit2$non_pears_correct / df.fruit2$non_pears_shown
 df.fruit2$pears_correct_proportion = df.fruit2$pears_correct / df.fruit2$pears_shown
+```
+
+```{r}
+describe(df.fruit2)
 ```
 
 ```{r fig.show = "hold", out.width = "50%"}
@@ -93,6 +102,10 @@ df.fruit3 = all_data$fruit3
 df.fruit3$non_pears_correct_proportion = df.fruit3$non_pears_correct / df.fruit3$non_pears_shown
 df.fruit3$pears_correct_proportion = df.fruit3$pears_correct / df.fruit3$pears_shown
 df.fruit3$stop_spaces_proportion = df.fruit3$stop_spaces / df.fruit3$stops
+```
+
+```{r}
+describe(df.fruit3)
 ```
 
 ```{r fig.show = "hold", out.width = "50%"}
@@ -119,6 +132,10 @@ df.fruit4$pears_correct_proportion = df.fruit4$pears_correct / df.fruit4$pears_s
 df.fruit4$stop_spaces_proportion = df.fruit4$stop_spaces / df.fruit4$stops
 df.fruit4$stop_ups_proportion = df.fruit4$stop_ups / df.fruit4$stops
 df.fruit4$slow_stops_proportion = df.fruit4$slow_stops / df.fruit4$stops
+```
+
+```{r}
+describe(df.fruit4)
 ```
 
 ```{r fig.show = "hold", out.width = "50%"}
@@ -163,6 +180,10 @@ df.card1$fives_correct_proportion = df.card1$fives_correct / df.card1$fives_show
 df.card1$cards_correct_proportion = df.card1$cards_correct / df.card1$cards_shown
 ```
 
+```{r}
+describe(df.card1)
+```
+
 ```{r fig.show = "hold", out.width = "50%"}
 df.card1 %>% 
   nice_histogram("fives_correct_proportion", binwidth = .1) +
@@ -180,6 +201,10 @@ df.card2 = all_data$card2
 
 df.card2$fives_correct_proportion = df.card2$fives_correct / df.card2$fives_shown
 df.card2$cards_correct_proportion = df.card2$cards_correct / df.card2$cards_shown
+```
+
+```{r}
+describe(df.card2)
 ```
 
 ```{r fig.show = "hold", out.width = "50%"}
@@ -201,6 +226,10 @@ df.card3$fives_correct_proportion = df.card3$fives_correct / df.card3$fives_show
 df.card3$cards_correct_proportion = df.card3$cards_correct / df.card3$cards_shown
 ```
 
+```{r}
+describe(df.card3)
+```
+
 ```{r fig.show = "hold", out.width = "50%"}
 df.card3 %>% 
   nice_histogram("fives_correct_proportion", binwidth = .1) +
@@ -219,6 +248,10 @@ df.card4 = all_data$card4
 df.card4$fives_correct_proportion = df.card4$fives_correct / df.card4$fives_shown
 df.card4$cards_correct_proportion = df.card4$cards_correct / df.card4$cards_shown
 df.card4$repetitions_correct_proportion = df.card4$repetitions_heard / df.card4$repetitions_heard
+```
+
+```{r}
+describe(df.card4)
 ```
 
 ```{r fig.show = "hold", out.width = "50%"}
