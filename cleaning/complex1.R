@@ -13,7 +13,8 @@ names = c("user_id",
           "order",
           "task",
           "number_done",
-          "score",
+          "number_correct",
+          # "score",
           "duration")
 # find each task start
 started = which(df_raw$tag2 == "Started")
@@ -63,7 +64,7 @@ for (i in 1:n) {
     task_range = (switches[s]:(switches[s+1]-1))
     raw_task_data = raw_user_data[task_range, ]
     
-    # pull task
+    # pull task name
     if (any(grepl("Name Sorting", raw_task_data$tag2))) {
       task = "Name Sorting"
     } else if (any(grepl("Card Sorting", raw_task_data$tag2))) {
@@ -76,6 +77,51 @@ for (i in 1:n) {
       task = "Spot Difference"
     }
     
+    # pull task scores
+    if (task == "Name Sorting") {
+      
+      temp_number_done = raw_task_data %>% 
+        filter(grepl("Item Moved. Score is:", tag2)) %>% 
+        nrow()
+
+      temp_number_correct = NA
+
+    } else if (task == "Card Sorting") {
+      
+      temp_number_done = raw_task_data %>% 
+        filter(grepl("card sorted", tag2)) %>% 
+        nrow()
+      
+      temp_number_correct = raw_task_data %>% 
+        filter(grepl("card sorted: correct", tag2)) %>% 
+        nrow()
+
+    } else if (task == "Dot to Dot") {
+      
+      temp_number_done = raw_task_data %>% 
+        filter(grepl("Dot Connected", tag2)) %>% 
+        nrow()
+      
+      temp_number_correct = NA
+
+    } else if (task == "Word Search") {
+      
+      temp_number_done = raw_task_data %>% 
+        filter(grepl("Word Found:", tag2)) %>% 
+        nrow()
+      
+      temp_number_correct = NA
+
+    } else if (task == "Spot Difference") {
+      
+      temp_number_done = raw_task_data %>% 
+        filter(grepl("Different Found", tag2)) %>% 
+        nrow()
+      
+      temp_number_correct = NA
+      
+    }
+    
     # pull duration
     task_duration = raw_task_data$created_at[1] %>%
       interval(raw_task_data$created_at[nrow(raw_task_data)]) %>%
@@ -84,6 +130,8 @@ for (i in 1:n) {
     # fill in participant dataframe
     temp_df$task[s] = task
     temp_df$duration[s] = task_duration
+    temp_df$number_done[s] = temp_number_done
+    temp_df$number_correct[s] = temp_number_correct
     
   }
 
