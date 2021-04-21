@@ -247,7 +247,7 @@ df.card4 = all_data$card4
 
 df.card4$fives_correct_proportion = df.card4$fives_correct / df.card4$fives_shown
 df.card4$cards_correct_proportion = df.card4$cards_correct / df.card4$cards_shown
-df.card4$repetitions_correct_proportion = df.card4$repetitions_heard / df.card4$repetitions_heard
+df.card4$repetitions_correct_proportion = df.card4$repetitions_correct / df.card4$repetitions_heard
 ```
 
 ```{r}
