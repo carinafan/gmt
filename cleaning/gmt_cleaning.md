@@ -1,9 +1,10 @@
 GMT Online Games – Data Cleaning
 ================
-Last updated: March 29, 2021
+Last updated: April 24, 2021
 
 -   [Fruit Clapping Tasks](#fruit-clapping-tasks)
 -   [Card Sorting Tasks](#card-sorting-tasks)
+-   [Complex Tasks](#complex-tasks)
 -   [Export data](#export-data)
 -   [Session info](#session-info)
 
@@ -53,7 +54,8 @@ df_to_keep = c(
   "df_card1", "dict_card1",
   "df_card2", "dict_card2",
   "df_card3", "dict_card3",
-  "df_card4", "dict_card4"
+  "df_card4", "dict_card4",
+  "df_complex1", "dict_complex1"
 )
 ```
 
@@ -81,6 +83,14 @@ source("card4.R")
 
 <!-- ======================================================================= -->
 
+# Complex Tasks
+
+``` r
+source("complex1.R")
+```
+
+<!-- ======================================================================= -->
+
 # Export data
 
 ``` r
@@ -91,7 +101,8 @@ list(fruit1 = df_fruit1,
      card1 = df_card1,
      card2 = df_card2,
      card3 = df_card3,
-     card4 = df_card4) %>% 
+     card4 = df_card4,
+     complex1 = df_complex1) %>% 
   write_xlsx("../data/gmt_clean.xlsx")
 ```
 
@@ -103,7 +114,8 @@ list(fruit1 = dict_fruit1,
      card1 = dict_card1,
      card2 = dict_card2,
      card3 = dict_card3,
-     card4 = dict_card4) %>% 
+     card4 = dict_card4,
+     complex1 = dict_complex1) %>% 
   write_xlsx("../data/gmt_dictionary.xlsx")
 ```
 

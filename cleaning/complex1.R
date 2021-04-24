@@ -84,8 +84,16 @@ for (i in 1:n) {
         filter(grepl("Item Moved. Score is:", tag2)) %>% 
         nrow()
 
-      temp_score = NA
-
+      temp_score = raw_task_data %>% 
+        filter(grepl("Item Moved. Score is:", tag2)) %>% 
+        select(tag3) %>% 
+        slice(temp_number_done) %>% 
+        pull()
+      
+      if (identical(temp_score, character(0))) {
+        temp_score = NA
+      }
+      
     } else if (task == "Card Sorting") {
       
       temp_number_done = raw_task_data %>% 
@@ -179,11 +187,36 @@ for (i in 1:nrow(dict)) {
            dict$value_range[i] = "anything greater than 0 and probably less than 200 ish"
          },
          
-         "score" = {
-           dict$description[i] = "card sort: number of cards sorted correctly. name sort: number of names in the correct relative positions. word search and spot difference: NA."
-         dict$type[i] = "integer"
-         dict_value_range[i] "integers greater than or equal to 0"
-         }
+         "order" = {
+           dict$description[i] = "order in which each task was selected"
+           dict$type[i] = "integer"
+           dict$value_range[i] = "any integer greater than 0"
+         },
          
+         "task" = {
+           dict$description[i] = "name of task selected"
+           dict$type[i] = "string"
+           dict$value_range[i] = "Card Sorting, Name Sorting, Dot to Dot, Word Search, or Spot Difference "
+         },
+         
+         "number_done" = {
+           dict$description[i] = "Card Sorting: number of cards sorted. Name Sorting: number of names moved. Dot to Dot: number of dot connected. Word Search: number of words found. Spot Difference: number of differences found."
+           dict$type[i] = "integer"
+           dict$value_range[i] = "any integer 0 or greater"
+         },
+         
+         "score" = {
+           dict$description[i] = "Card Sorting: number of cards sorted correctly. Name Sorting: number of names in the correct relative positions. Word Search, Dot to Dot, and Spot Difference: NA."
+           dict$type[i] = "integer"
+           dict$value_range[i] = "any integer 0 or greater"
+         }
+
   )
 }
+
+#---- clean up ----
+
+df_complex1 = df
+dict_complex1 = dict
+
+rm(list= ls()[!(ls() %in% df_to_keep)])
