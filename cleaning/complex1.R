@@ -13,10 +13,10 @@ names = c("user_id",
           "order",
           "task",
           "number_done",
-          "number_correct",
-          # "score",
+          "score",
           "duration")
-# find each task start
+
+# find each task starts
 started = which(df_raw$tag2 == "Started")
 
 # number of starts
@@ -84,7 +84,7 @@ for (i in 1:n) {
         filter(grepl("Item Moved. Score is:", tag2)) %>% 
         nrow()
 
-      temp_number_correct = NA
+      temp_score = NA
 
     } else if (task == "Card Sorting") {
       
@@ -92,7 +92,7 @@ for (i in 1:n) {
         filter(grepl("card sorted", tag2)) %>% 
         nrow()
       
-      temp_number_correct = raw_task_data %>% 
+      temp_score = raw_task_data %>% 
         filter(grepl("card sorted: correct", tag2)) %>% 
         nrow()
 
@@ -102,7 +102,7 @@ for (i in 1:n) {
         filter(grepl("Dot Connected", tag2)) %>% 
         nrow()
       
-      temp_number_correct = NA
+      temp_score = NA
 
     } else if (task == "Word Search") {
       
@@ -110,7 +110,7 @@ for (i in 1:n) {
         filter(grepl("Word Found:", tag2)) %>% 
         nrow()
       
-      temp_number_correct = NA
+      temp_score = NA
 
     } else if (task == "Spot Difference") {
       
@@ -118,7 +118,7 @@ for (i in 1:n) {
         filter(grepl("Different Found", tag2)) %>% 
         nrow()
       
-      temp_number_correct = NA
+      temp_score = NA
       
     }
     
@@ -131,7 +131,7 @@ for (i in 1:n) {
     temp_df$task[s] = task
     temp_df$duration[s] = task_duration
     temp_df$number_done[s] = temp_number_done
-    temp_df$number_correct[s] = temp_number_correct
+    temp_df$score[s] = temp_score
     
   }
 
@@ -144,3 +144,46 @@ for (i in 1:n) {
   # append participant dataframe to overall dataframe
   df %<>% rbind(temp_df)
 } 
+
+#---- data dictionary ----
+
+# export column names
+dict = names(df) %>%
+  as.data.frame(stringsAsFactors = FALSE)
+names(dict) = "column_label"
+
+# add columns to describe the variables in each column
+dict$description = NA
+dict$type = NA
+dict$value_range = NA
+
+# fill in dictionary
+for (i in 1:nrow(dict)) {
+  switch(dict$column_label[i],
+         
+         "user_id" = {
+           dict$description[i] = "user ID"
+           dict$type[i] = "ID number"
+           dict$value_range[i] = "NA"
+         },
+         
+         "date" = {
+           dict$description[i] = "date (yyyy-mm-dd)"
+           dict$type[i] = "date"
+           dict$value_range[i] = "NA"
+         },
+         
+         "duration" = {
+           dict$description[i] = "task duration in seconds"
+           dict$type[i] = "integer"
+           dict$value_range[i] = "anything greater than 0 and probably less than 200 ish"
+         },
+         
+         "score" = {
+           dict$description[i] = "card sort: number of cards sorted correctly. name sort: number of names in the correct relative positions. word search and spot difference: NA."
+         dict$type[i] = "integer"
+         dict_value_range[i] "integers greater than or equal to 0"
+         }
+         
+  )
+}
