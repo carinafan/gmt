@@ -13,8 +13,7 @@ names = c("user_id",
           "order",
           "task",
           "number_done",
-          "number_correct",
-          # "score",
+          "score",
           "stops",
           "duration")
 
@@ -86,7 +85,7 @@ for (i in 1:n) {
         filter(grepl("Item Moved. Score is:", tag2)) %>% 
         nrow()
 
-      temp_number_correct = NA
+      temp_score = NA
 
     } else if (task == "Card Sorting") {
       
@@ -94,7 +93,7 @@ for (i in 1:n) {
         filter(grepl("card sorted", tag2)) %>% 
         nrow()
       
-      temp_number_correct = raw_task_data %>% 
+      temp_score = raw_task_data %>% 
         filter(grepl("card sorted: correct", tag2)) %>% 
         nrow()
 
@@ -104,7 +103,7 @@ for (i in 1:n) {
         filter(grepl("Dot Connected", tag2)) %>% 
         nrow()
       
-      temp_number_correct = NA
+      temp_score = NA
 
     } else if (task == "Word Search") {
       
@@ -112,7 +111,7 @@ for (i in 1:n) {
         filter(grepl("Word Found:", tag2)) %>% 
         nrow()
       
-      temp_number_correct = NA
+      temp_score = NA
 
     } else if (task == "Spot Difference") {
       
@@ -120,7 +119,7 @@ for (i in 1:n) {
         filter(grepl("Different Found", tag2)) %>% 
         nrow()
       
-      temp_number_correct = NA
+      temp_score = NA
       
     }
     
@@ -138,7 +137,7 @@ for (i in 1:n) {
     temp_df$task[s] = task
     temp_df$duration[s] = task_duration
     temp_df$number_done[s] = temp_number_done
-    temp_df$number_correct[s] = temp_number_correct
+    temp_df$score[s] = temp_score
     temp_df$stops[s] = task_stops
     
   }
