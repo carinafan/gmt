@@ -31,6 +31,13 @@ df = data.frame(matrix(data = NA, nrow = 0, ncol = length(names)))
 names(df) = names
 df$date %<>% ymd()
 
+# set task names
+tasks = c("Card Sorting",
+          "Name Sorting",
+          "Dot to Dot",
+          "Spot Difference",
+          "Word Search")
+
 #---- pull data ----
 
 # for each task start...
@@ -66,26 +73,41 @@ for (i in 1:n) {
     raw_task_data = raw_user_data[task_range, ]
     
     # pull task name
-    if (any(grepl("Name Sorting", raw_task_data$tag2))) {
-      task = "Name Sorting"
-    } else if (any(grepl("Card Sorting", raw_task_data$tag2))) {
-      task = "Card Sorting"
-    } else if (any(grepl("Dot to Dot", raw_task_data$tag2))) {
-      task = "Dot to Dot"
-    } else if (any(grepl("Word Search", raw_task_data$tag2))) {
-      task = "Word Search"
-    } else if (any(grepl("Spot Difference", raw_task_data$tag2))) {
-      task = "Spot Difference"
-    }
+    # if (any(grepl("Name Sorting", raw_task_data$tag2))) {
+    #   task = "Birthdate Sorting"
+    # } else if (any(grepl("Card Sorting", raw_task_data$tag2))) {
+    #   task = "Card Sorting"
+    # } else if (any(grepl("Dot to Dot", raw_task_data$tag2))) {
+    #   task = "Dot to Dot"
+    # } else if (any(grepl("Word Search", raw_task_data$tag2))) {
+    #   task = "Word Search"
+    # } else if (any(grepl("Spot Difference", raw_task_data$tag2))) {
+    #   task = "Spot Difference"
+    # } else (
+    #   task = NA
+    # )
     
     # pull task scores
-    if (task == "Name Sorting") {
+    if (is.na(task)) {
+     
+      temp_number_done = NA
+      temp_score = NA
+       
+    } else if (task == "Birthdate Sorting") {
       
       temp_number_done = raw_task_data %>% 
         filter(grepl("Item Moved. Score is:", tag2)) %>% 
         nrow()
 
-      temp_score = NA
+      temp_score = raw_task_data %>% 
+        filter(grepl("Item Moved. Score is:", tag2)) %>% 
+        select(tag3) %>% 
+        slice(temp_number_done) %>% 
+        pull()
+      
+      if (identical(temp_score, character(0))) {
+        temp_score = NA
+      }
 
     } else if (task == "Card Sorting") {
       
@@ -151,3 +173,77 @@ for (i in 1:n) {
   # append participant dataframe to overall dataframe
   df %<>% rbind(temp_df)
 } 
+
+#---- data dictionary ----
+
+# export column names
+dict = names(df) %>%
+  as.data.frame(stringsAsFactors = FALSE)
+names(dict) = "column_label"
+
+# add columns to describe the variables in each column
+dict$description = NA
+dict$type = NA
+dict$value_range = NA
+
+# fill in dictionary
+for (i in 1:nrow(dict)) {
+  switch(dict$column_label[i],
+         
+         "user_id" = {
+           dict$description[i] = "user ID"
+           dict$type[i] = "ID number"
+           dict$value_range[i] = "NA"
+         },
+         
+         "date" = {
+           dict$description[i] = "date (yyyy-mm-dd)"
+           dict$type[i] = "date"
+           dict$value_range[i] = "NA"
+         },
+         
+         "duration" = {
+           dict$description[i] = "task duration in seconds"
+           dict$type[i] = "integer"
+           dict$value_range[i] = "anything greater than 0 and probably less than 200 ish"
+         },
+         
+         "order" = {
+           dict$description[i] = "order in which each task was selected"
+           dict$type[i] = "integer"
+           dict$value_range[i] = "any integer greater than 0"
+         },
+         
+         "task" = {
+           dict$description[i] = "name of task selected"
+           dict$type[i] = "string"
+           dict$value_range[i] = "Card Sorting, Birthdate Sorting, Dot to Dot, Word Search, or Spot Difference "
+         },
+         
+         "number_done" = {
+           dict$description[i] = "Card Sorting: number of cards sorted. Birthday Sorting: number of dates moved. Dot to Dot: number of dot connected. Word Search: number of words found. Spot Difference: number of differences found."
+           dict$type[i] = "integer"
+           dict$value_range[i] = "any integer 0 or greater"
+         },
+         
+         "score" = {
+           dict$description[i] = "Card Sorting: number of cards sorted correctly. Birthdate Sorting: number of dates in the correct relative positions. Word Search, Dot to Dot, and Spot Difference: NA."
+           dict$type[i] = "integer"
+           dict$value_range[i] = "any integer 0 or greater"
+         },
+         
+         "stops" = {
+           dict$description[i] = "number of stops sounded"
+           dict$type[i] = "integer"
+           dict$value_range[i] = "any integer 0 or greater"
+         }
+         
+  )
+}
+
+#---- clean up ----
+
+df_complex2 = df
+dict_complex2 = dict
+
+rm(list= ls()[!(ls() %in% df_to_keep)])
