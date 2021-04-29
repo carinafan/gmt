@@ -1,6 +1,6 @@
 GMT Online Games – Data Cleaning
 ================
-Last updated: April 24, 2021
+Last updated: April 29, 2021
 
 -   [Fruit Clapping Tasks](#fruit-clapping-tasks)
 -   [Card Sorting Tasks](#card-sorting-tasks)
@@ -55,7 +55,8 @@ df_to_keep = c(
   "df_card2", "dict_card2",
   "df_card3", "dict_card3",
   "df_card4", "dict_card4",
-  "df_complex1", "dict_complex1"
+  "df_complex1", "dict_complex1",
+  "df_complex2", "dict_complex2"
 )
 ```
 
@@ -87,7 +88,14 @@ source("card4.R")
 
 ``` r
 source("complex1.R")
+source("complex2.R")
 ```
+
+Note that for Complex Tasks 2, if there are straggling rows that got
+smushed somewhere in the middle of the next task, I haven’t written
+anything to retrieve those rows, except for the one participant I
+hard-coded a fix for. After a visual scan though it looks like it might
+have only happened for that one participant.
 
 <!-- ======================================================================= -->
 
@@ -102,7 +110,8 @@ list(fruit1 = df_fruit1,
      card2 = df_card2,
      card3 = df_card3,
      card4 = df_card4,
-     complex1 = df_complex1) %>% 
+     complex1 = df_complex1,
+     complex2 = df_complex2) %>% 
   write_xlsx("../data/gmt_clean.xlsx")
 ```
 
@@ -115,7 +124,8 @@ list(fruit1 = dict_fruit1,
      card2 = dict_card2,
      card3 = dict_card3,
      card4 = dict_card4,
-     complex1 = dict_complex1) %>% 
+     complex1 = dict_complex1,
+     compelx2 = dict_complex2) %>% 
   write_xlsx("../data/gmt_dictionary.xlsx")
 ```
 

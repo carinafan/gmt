@@ -183,6 +183,25 @@ for (i in 1:n) {
   df %<>% rbind(temp_df)
 } 
 
+#---- hard code fixes ----
+
+df$task[28] = "Card Sorting"
+df$number_done[28] = 16
+df$score[28] = 16
+
+df$task[29] = "Dot to Dot"
+df$number_done[29] = 0
+
+df$task[99] = NA
+df$number_done[99] = NA
+
+df$number_done[101] = 6
+
+df$task[102] = "Spot Difference"
+df$number_done[102] = 5
+
+df = df[-c(38, 67, 104, 150, 156, 178, 217, 241), ]
+
 #---- data dictionary ----
 
 # export column names
