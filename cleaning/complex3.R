@@ -13,12 +13,18 @@ names = c("user_id",
           "order",
           "task",
           "number_done",
-          "number_correct",
-          # "score",
+          "score",
           "duration")
 
+# set task names
+tasks = c("Card Sorting",
+          "Name Sorting",
+          "Dot to Dot",
+          "Spot Difference",
+          "Word Search")
+
 # find each task starts
-started = which(df_raw$tag2 == "Game Started")
+started = which(df_raw$tag2 == "Started")
 
 # number of starts
 n = length(started)
@@ -65,63 +71,91 @@ for (i in 1:n) {
     task_range = (switches[s]:(switches[s+1]-1))
     raw_task_data = raw_user_data[task_range, ]
     
-    # pull task name
-    if (any(grepl("Name Sorting", raw_task_data$tag2))) {
-      task = "Name Sorting"
-    } else if (any(grepl("Card Sorting", raw_task_data$tag2))) {
-      task = "Card Sorting"
-    } else if (any(grepl("Dot to Dot", raw_task_data$tag2))) {
-      task = "Dot to Dot"
-    } else if (any(grepl("Word Search", raw_task_data$tag2))) {
-      task = "Word Search"
-    } else if (any(grepl("Spot Difference", raw_task_data$tag2))) {
-      task = "Spot Difference"
+    # check for task name
+    temp_task_rows = raw_task_data %>% 
+      filter(tag2 %in% tasks) %>% 
+      select(tag2)
+
+    # if there is only 1 task name present, pull scores
+    if (nrow(temp_task_rows) == 1) {
+      
+      # pull task name
+      if (temp_task_rows$tag2 == "Name Sorting") {
+        temp_task = "Name Sorting"
+      } else if (temp_task_rows$tag2 == "Card Sorting") {
+        temp_task = "Card Sorting"
+      } else if (temp_task_rows$tag2 == "Dot to Dot") {
+        temp_task = "Dot to Dot"
+      } else if (temp_task_rows$tag2 == "Word Search") {
+        temp_task = "Word Search"
+      } else if (temp_task_rows$tag2 == "Spot Difference") {
+        temp_task = "Spot Difference"
+      }
+      
+      # pull task scores
+      if (temp_task == "Name Sorting") {
+        
+        temp_number_done = raw_task_data %>% 
+          filter(grepl("Item Moved. Score is:", tag2)) %>% 
+          nrow()
+        
+        temp_score = raw_task_data %>% 
+          filter(grepl("Item Moved. Score is:", tag2)) %>% 
+          select(tag3) %>% 
+          slice(temp_number_done) %>% 
+          pull()
+        
+        if (identical(temp_score, character(0))) {
+          temp_score = NA
+        }
+        
+      } else if (temp_task == "Card Sorting") {
+        
+        temp_number_done = raw_task_data %>% 
+          filter(grepl("card sorted", tag2)) %>% 
+          nrow()
+        
+        temp_score = raw_task_data %>% 
+          filter(grepl("card sorted: correct", tag2)) %>% 
+          nrow()
+        
+      } else if (temp_task == "Dot to Dot") {
+        
+        temp_number_done = raw_task_data %>% 
+          filter(grepl("Dot Connected", tag2)) %>% 
+          nrow()
+        
+        temp_score = NA
+        
+      } else if (temp_task == "Word Search") {
+        
+        temp_number_done = raw_task_data %>% 
+          filter(grepl("Word Found:", tag2)) %>% 
+          nrow()
+        
+        temp_score = NA
+        
+      } else if (temp_task == "Spot Difference") {
+        
+        temp_number_done = raw_task_data %>% 
+          filter(grepl("Different Found", tag2)) %>% 
+          nrow()
+        
+        temp_score = NA
+        
+      }
+      
+    } else { # otherwise put NAs, to be filled manually
+      
+      temp_task = NA
+      temp_number_done = NA
+      temp_score = NA
+      
     }
-    
-    # pull task scores
-    if (task == "Name Sorting") {
-      
-      temp_number_done = raw_task_data %>% 
-        filter(grepl("Item Moved. Score is:", tag2)) %>% 
-        nrow()
 
-      temp_number_correct = NA
-
-    } else if (task == "Card Sorting") {
-      
-      temp_number_done = raw_task_data %>% 
-        filter(grepl("card sorted", tag2)) %>% 
-        nrow()
-      
-      temp_number_correct = raw_task_data %>% 
-        filter(grepl("card sorted: correct", tag2)) %>% 
-        nrow()
-
-    } else if (task == "Dot to Dot") {
-      
-      temp_number_done = raw_task_data %>% 
-        filter(grepl("Dot Connected", tag2)) %>% 
-        nrow()
-      
-      temp_number_correct = NA
-
-    } else if (task == "Word Search") {
-      
-      temp_number_done = raw_task_data %>% 
-        filter(grepl("Word Found:", tag2)) %>% 
-        nrow()
-      
-      temp_number_correct = NA
-
-    } else if (task == "Spot Difference") {
-      
-      temp_number_done = raw_task_data %>% 
-        filter(grepl("Different Found", tag2)) %>% 
-        nrow()
-      
-      temp_number_correct = NA
-      
-    }
+    # remove Game Started rows so they don't mess up duration
+    raw_task_data %<>%
+      filter(tag2 != "Game Started")
     
     # pull duration
     task_duration = raw_task_data$created_at[1] %>%
@@ -129,10 +163,10 @@ for (i in 1:n) {
       time_length("seconds")
 
     # fill in participant dataframe
-    temp_df$task[s] = task
+    temp_df$task[s] = temp_task
     temp_df$duration[s] = task_duration
     temp_df$number_done[s] = temp_number_done
-    temp_df$number_correct[s] = temp_number_correct
+    temp_df$score[s] = temp_score
     
   }
 
