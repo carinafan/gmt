@@ -179,3 +179,7 @@ for (i in 1:n) {
   # append participant dataframe to overall dataframe
   df %<>% rbind(temp_df)
 } 
+
+#---- hard code fixes ----
+
+df = df[-c(5, 117, 127, 133), ]
