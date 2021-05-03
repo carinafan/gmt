@@ -1,6 +1,6 @@
 GMT Online Games – Data Cleaning
 ================
-Last updated: April 29, 2021
+Last updated: May 03, 2021
 
 -   [Fruit Clapping Tasks](#fruit-clapping-tasks)
 -   [Card Sorting Tasks](#card-sorting-tasks)
@@ -56,7 +56,8 @@ df_to_keep = c(
   "df_card3", "dict_card3",
   "df_card4", "dict_card4",
   "df_complex1", "dict_complex1",
-  "df_complex2", "dict_complex2"
+  "df_complex2", "dict_complex2",
+  "df_complex3", "dict_complex3"
 )
 ```
 
@@ -89,13 +90,27 @@ source("card4.R")
 ``` r
 source("complex1.R")
 source("complex2.R")
+source("complex3.R")
 ```
 
-Note that for Complex Tasks 2, if there are straggling rows that got
-smushed somewhere in the middle of the next task, I haven’t written
-anything to retrieve those rows, except for the one participant I
-hard-coded a fix for. After a visual scan though it looks like it might
-have only happened for that one participant.
+I currently have the code set up to subset the data based on the “Task
+Switch” rows, and then search within each chunk between those rows for a
+task name. If there is only one row that matches the task name, then I
+assume that the name is in the correct chunk and I look for
+corresponding trials. If there is more than 1 task name or there is no
+task name (presumably because it somehow got output on the wrong side of
+the Task Switch row and is in the wrong chunk), then I just output NA
+and go back and hard code it manually.
+
+In Complex 2, there were quite a few instances where I had to hard-code
+fixes here. There was also one participant (118) with completely wonky
+data that I couldn’t figure out manually, so I left 2 rows for that
+participant blank.
+
+In Complex 3, the only things I had to hard code were for a few
+participants where there was a Task Switch at the end of the
+participant’s data set, so I just removed the last task (it was unclear
+what they were switching to at the very end).
 
 <!-- ======================================================================= -->
 
@@ -111,7 +126,8 @@ list(fruit1 = df_fruit1,
      card3 = df_card3,
      card4 = df_card4,
      complex1 = df_complex1,
-     complex2 = df_complex2) %>% 
+     complex2 = df_complex2,
+     complex3 = df_complex3) %>% 
   write_xlsx("../data/gmt_clean.xlsx")
 ```
 
@@ -125,7 +141,8 @@ list(fruit1 = dict_fruit1,
      card3 = dict_card3,
      card4 = dict_card4,
      complex1 = dict_complex1,
-     compelx2 = dict_complex2) %>% 
+     complex2 = dict_complex2,
+     complex3 = dict_complex3) %>% 
   write_xlsx("../data/gmt_dictionary.xlsx")
 ```
 
@@ -137,7 +154,7 @@ list(fruit1 = dict_fruit1,
 sessionInfo()
 ```
 
-    ## R version 4.0.4 (2021-02-15)
+    ## R version 4.0.5 (2021-03-31)
     ## Platform: x86_64-apple-darwin17.0 (64-bit)
     ## Running under: macOS Catalina 10.15.7
     ## 
@@ -158,14 +175,14 @@ sessionInfo()
     ## [13] lubridate_1.7.9
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] Rcpp_1.0.5       cellranger_1.1.0 pillar_1.4.6     compiler_4.0.4  
-    ##  [5] dbplyr_2.0.0     tools_4.0.4      digest_0.6.27    jsonlite_1.7.1  
+    ##  [1] Rcpp_1.0.5       cellranger_1.1.0 pillar_1.4.6     compiler_4.0.5  
+    ##  [5] dbplyr_2.0.0     tools_4.0.5      digest_0.6.27    jsonlite_1.7.1  
     ##  [9] evaluate_0.14    lifecycle_0.2.0  gtable_0.3.0     pkgconfig_2.0.3 
     ## [13] rlang_0.4.8      reprex_0.3.0     cli_2.1.0        rstudioapi_0.11 
     ## [17] DBI_1.1.0        yaml_2.2.1       haven_2.3.1      xfun_0.19       
     ## [21] withr_2.3.0      xml2_1.3.2       httr_1.4.2       knitr_1.30      
     ## [25] fs_1.5.0         hms_0.5.3        generics_0.1.0   vctrs_0.3.4     
-    ## [29] grid_4.0.4       tidyselect_1.1.0 glue_1.4.2       R6_2.5.0        
+    ## [29] grid_4.0.5       tidyselect_1.1.0 glue_1.4.2       R6_2.5.0        
     ## [33] fansi_0.4.1      rmarkdown_2.5    modelr_0.1.8     backports_1.2.0 
     ## [37] scales_1.1.1     ellipsis_0.3.1   htmltools_0.5.0  rvest_0.3.6     
     ## [41] assertthat_0.2.1 colorspace_1.4-1 stringi_1.5.3    munsell_0.5.0   

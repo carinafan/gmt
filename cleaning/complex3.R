@@ -183,3 +183,71 @@ for (i in 1:n) {
 #---- hard code fixes ----
 
 df = df[-c(5, 117, 127, 133), ]
+
+#---- data dictionary ----
+
+# export column names
+dict = names(df) %>%
+  as.data.frame(stringsAsFactors = FALSE)
+names(dict) = "column_label"
+
+# add columns to describe the variables in each column
+dict$description = NA
+dict$type = NA
+dict$value_range = NA
+
+# fill in dictionary
+for (i in 1:nrow(dict)) {
+  switch(dict$column_label[i],
+         
+         "user_id" = {
+           dict$description[i] = "user ID"
+           dict$type[i] = "ID number"
+           dict$value_range[i] = "NA"
+         },
+         
+         "date" = {
+           dict$description[i] = "date (yyyy-mm-dd)"
+           dict$type[i] = "date"
+           dict$value_range[i] = "NA"
+         },
+         
+         "duration" = {
+           dict$description[i] = "task duration in seconds"
+           dict$type[i] = "integer"
+           dict$value_range[i] = "anything greater than 0 and probably less than 200 ish"
+         },
+         
+         "order" = {
+           dict$description[i] = "order in which each task was selected"
+           dict$type[i] = "integer"
+           dict$value_range[i] = "any integer greater than 0"
+         },
+         
+         "task" = {
+           dict$description[i] = "name of task selected"
+           dict$type[i] = "string"
+           dict$value_range[i] = "Card Sorting, Name Sorting, Dot to Dot, Word Search, or Spot Difference "
+         },
+         
+         "number_done" = {
+           dict$description[i] = "Card Sorting: number of cards sorted. Name Sorting: number of names moved. Dot to Dot: number of dot connected. Word Search: number of words found. Spot Difference: number of differences found."
+           dict$type[i] = "integer"
+           dict$value_range[i] = "any integer 0 or greater"
+         },
+         
+         "score" = {
+           dict$description[i] = "Card Sorting: number of cards sorted correctly. Name Sorting: number of names in the correct relative positions. Word Search, Dot to Dot, and Spot Difference: NA."
+           dict$type[i] = "integer"
+           dict$value_range[i] = "any integer 0 or greater"
+         }
+         
+  )
+}
+
+#---- clean up ----
+
+df_complex3 = df
+dict_complex3 = dict
+
+rm(list= ls()[!(ls() %in% df_to_keep)])

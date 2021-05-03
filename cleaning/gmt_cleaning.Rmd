@@ -26,7 +26,8 @@ df_to_keep = c(
   "df_card3", "dict_card3",
   "df_card4", "dict_card4",
   "df_complex1", "dict_complex1",
-  "df_complex2", "dict_complex2"
+  "df_complex2", "dict_complex2",
+  "df_complex3", "dict_complex3"
 )
 ```
 
@@ -65,9 +66,14 @@ source("card4.R")
 ```{r}
 source("complex1.R")
 source("complex2.R")
+source("complex3.R")
 ```
 
-Note that for Complex Tasks 2, if there are straggling rows that got smushed somewhere in the middle of the next task, I haven't written anything to retrieve those rows, except for the one participant I hard-coded a fix for. After a visual scan though it looks like it might have only happened for that one participant.
+I currently have the code set up to subset the data based on the "Task Switch" rows, and then search within each chunk between those rows for a task name. If there is only one row that matches the task name, then I assume that the name is in the correct chunk and I look for corresponding trials. If there is more than 1 task name or there is no task name (presumably because it somehow got output on the wrong side of the Task Switch row and is in the wrong chunk), then I just output NA and go back and hard code it manually.
+
+In Complex 2, there were quite a few instances where I had to hard-code fixes here. There was also one participant (118) with completely wonky data that I couldn't figure out manually, so I left 2 rows for that participant blank.
+
+In Complex 3, the only things I had to hard code were for a few participants where there was a Task Switch at the end of the participant's data set, so I just removed the last task (it was unclear what they were switching to at the very end). 
 
 
 <!-- ======================================================================= -->
@@ -85,7 +91,8 @@ list(fruit1 = df_fruit1,
      card3 = df_card3,
      card4 = df_card4,
      complex1 = df_complex1,
-     complex2 = df_complex2) %>% 
+     complex2 = df_complex2,
+     complex3 = df_complex3) %>% 
   write_xlsx("../data/gmt_clean.xlsx")
 ```
 
@@ -99,7 +106,8 @@ list(fruit1 = dict_fruit1,
      card3 = dict_card3,
      card4 = dict_card4,
      complex1 = dict_complex1,
-     compelx2 = dict_complex2) %>% 
+     complex2 = dict_complex2,
+     complex3 = dict_complex3) %>% 
   write_xlsx("../data/gmt_dictionary.xlsx")
 ```
 
