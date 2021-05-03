@@ -102,6 +102,10 @@ task name (presumably because it somehow got output on the wrong side of
 the Task Switch row and is in the wrong chunk), then I just output NA
 and go back and hard code it manually.
 
+In Complex 1, there were 2 instances where I removed an empty row at the
+end because there was a Task Switch with nothing after, and 1 instance
+where the name didn’t show up in the chunk so I had to code that in.
+
 In Complex 2, there were quite a few instances where I had to hard-code
 fixes here. There was also one participant (118) with completely wonky
 data that I couldn’t figure out manually, so I left 2 rows for that

@@ -71,6 +71,8 @@ source("complex3.R")
 
 I currently have the code set up to subset the data based on the "Task Switch" rows, and then search within each chunk between those rows for a task name. If there is only one row that matches the task name, then I assume that the name is in the correct chunk and I look for corresponding trials. If there is more than 1 task name or there is no task name (presumably because it somehow got output on the wrong side of the Task Switch row and is in the wrong chunk), then I just output NA and go back and hard code it manually.
 
+In Complex 1, there were 2 instances where I removed an empty row at the end because there was a Task Switch with nothing after, and 1 instance where the name didn't show up in the chunk so I had to code that in.
+
 In Complex 2, there were quite a few instances where I had to hard-code fixes here. There was also one participant (118) with completely wonky data that I couldn't figure out manually, so I left 2 rows for that participant blank.
 
 In Complex 3, the only things I had to hard code were for a few participants where there was a Task Switch at the end of the participant's data set, so I just removed the last task (it was unclear what they were switching to at the very end). 
