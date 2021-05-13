@@ -189,8 +189,7 @@ for (i in 1:n) {
 
   # fill in remaining info
   temp_df$user_id = raw_user_data$user_id[1]
-  temp_df$date = raw_user_data$created_at[1] %>% 
-    date()
+  temp_df$date = raw_user_data$created_at[1]
   temp_df$order = seq(1:(length(switches) - 1))
   
   # append participant dataframe to overall dataframe
@@ -204,6 +203,12 @@ df$number_done[43] = 9
 df$score[43] = 8
 
 df = df[-c(116, 202), ]
+
+#---- summary ----
+
+df = data.frame(matrix(data = NA, nrow = 0, ncol = length(names)))
+names(df) = names
+df$date %<>% ymd()
 
 #---- data dictionary ----
 
@@ -228,7 +233,7 @@ for (i in 1:nrow(dict)) {
          },
          
          "date" = {
-           dict$description[i] = "date (yyyy-mm-dd)"
+           dict$description[i] = "date (yyyy-mm-dd hh-mm-ss UTC)"
            dict$type[i] = "date"
            dict$value_range[i] = "NA"
          },
@@ -271,6 +276,10 @@ for (i in 1:nrow(dict)) {
 
   )
 }
+
+#---- data dictionary (summary) ----
+
+
 
 #---- clean up ----
 
