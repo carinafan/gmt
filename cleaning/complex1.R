@@ -205,6 +205,12 @@ df$score[43] = 8
 
 df = df[-c(116, 202), ]
 
+#---- summary ----
+
+df = data.frame(matrix(data = NA, nrow = 0, ncol = length(names)))
+names(df) = names
+df$date %<>% ymd()
+
 #---- data dictionary ----
 
 # export column names
@@ -271,6 +277,10 @@ for (i in 1:nrow(dict)) {
 
   )
 }
+
+#---- data dictionary (summary) ----
+
+
 
 #---- clean up ----
 
