@@ -192,8 +192,7 @@ for (i in 1:n) {
 
   # fill in remaining info
   temp_df$user_id = raw_user_data$user_id[1]
-  temp_df$date = raw_user_data$created_at[1] %>% 
-    date()
+  temp_df$date = raw_user_data$created_at[1]
   temp_df$order = seq(1:(length(switches) - 1))
   
   # append participant dataframe to overall dataframe
@@ -207,6 +206,12 @@ df$number_done[43] = 9
 df$score[43] = 8
 
 df = df[-c(116, 202), ]
+
+#---- summary ----
+
+df = data.frame(matrix(data = NA, nrow = 0, ncol = length(names)))
+names(df) = names
+df$date %<>% ymd()
 
 #---- data dictionary ----
 
@@ -231,7 +236,7 @@ for (i in 1:nrow(dict)) {
          },
          
          "date" = {
-           dict$description[i] = "date (yyyy-mm-dd)"
+           dict$description[i] = "date (yyyy-mm-dd hh-mm-ss UTC)"
            dict$type[i] = "date"
            dict$value_range[i] = "NA"
          },
@@ -347,36 +352,6 @@ for (i in 1:nrow(dict.summary)) {
            dict$description[i] = "total duration in seconds"
            dict$type[i] = "integer"
            dict$value_range[i] = "0 to 240"
-         },
-         
-         "order" = {
-           dict$description[i] = "order in which each task was selected"
-           dict$type[i] = "integer"
-           dict$value_range[i] = "any integer greater than 0"
-         },
-         
-         "task" = {
-           dict$description[i] = "name of task selected"
-           dict$type[i] = "string"
-           dict$value_range[i] = "Card Sorting, Name Sorting, Dot to Dot, Word Search, or Spot Difference "
-         },
-         
-         "number_done" = {
-           dict$description[i] = "Card Sorting: number of cards sorted. Name Sorting: number of names moved. Dot to Dot: number of dot connected. Word Search: number of words found. Spot Difference: number of differences found."
-           dict$type[i] = "integer"
-           dict$value_range[i] = "any integer 0 or greater"
-         },
-         
-         "number_correct" = {
-           dict$description[i] = "Card Sorting: number of cards placed into correct suit pile. Name Sorting, Word Search, Dot to Dot, and Spot Difference: NA."
-           dict$type[i] = "integer"
-           dict$value_range[i] = "any integer 0 or greater"
-         }, 
-         
-         "score" = {
-           dict$description[i] = "Card Sorting: reflects correctness of order within suits. Name Sorting: number of names in the correct relative positions. Word Search, Dot to Dot, and Spot Difference: NA."
-           dict$type[i] = "integer"
-           dict$value_range[i] = "any integer 0 or greater"
          }
          
   )
