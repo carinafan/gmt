@@ -174,8 +174,11 @@ for (i in 1:n) {
       filter(tag2 != "Game Started")
     
     # pull duration
-    task_duration = raw_task_data$created_at[1] %>%
-      interval(raw_task_data$created_at[nrow(raw_task_data)]) %>%
+    # task_duration = raw_task_data$created_at[1] %>%
+    #   interval(raw_task_data$created_at[nrow(raw_task_data)]) %>%
+    #   time_length("seconds")
+    task_duration = raw_user_data$created_at[switches[s]] %>% 
+      interval(raw_user_data$created_at[switches[s+1]]) %>% 
       time_length("seconds")
     
     # fill in participant dataframe
@@ -204,12 +207,6 @@ df$number_done[43] = 9
 df$score[43] = 8
 
 df = df[-c(116, 202), ]
-
-#---- summary ----
-
-df = data.frame(matrix(data = NA, nrow = 0, ncol = length(names)))
-names(df) = names
-df$date %<>% ymd()
 
 #---- data dictionary ----
 
@@ -278,9 +275,112 @@ for (i in 1:nrow(dict)) {
   )
 }
 
+#---- summary ----
+
+names.summary = c(
+  "user_id",
+  "date",
+  "total_duration",
+  "switches",
+  "tasks_attempted",
+  "total_score",
+  "total_bonus",
+  "card_score", "card_bonus", "card_number_sorted", "card_number_sorted_correct",
+  "name_score", "name_bonus", "name_items_moved",
+  "dot_score", "dot_bonus",
+  "word_score", "word_bonus",
+  "difference_score", "difference_bonus"
+)
+
+df.summary = data.frame(matrix(data = NA, nrow = 0, ncol = length(names.summary)))
+names(df.summary) = names.summary
+df.summary$date %<>% ymd_hms()
+
+participants = which(df$order == 1)
+participants %<>% append(nrow(df)+1)
+
+for (i in 1:length(participants)) {
+  
+  # pull participant's data from cleaned dataframe
+  participant_data = df[participants[i]:participants[i+1]-1, ]
+  
+  # set up a temporary empty dataframe for summary scores
+  temp_df = data.frame(matrix(data = NA, nrow = 1, ncol = length(names.summary)))
+  names(temp_df) = names.summary
+  
+  # fill in temporary dataframe
+  temp_df$user_id = participant_data$user_id[1]
+  temp_df$date = participant_data$date[1]
+  temp_df$total_duration = sum(participant_data$duration)
+  
+}
+
 #---- data dictionary (summary) ----
 
+# export column names
+dict.summary = names(df.summary) %>%
+  as.data.frame(stringsAsFactors = FALSE)
+names(dict.summary) = "column_label"
 
+# add columns to describe the variables in each column
+dict$description = NA
+dict$type = NA
+dict$value_range = NA
+
+# fill in dictionary
+for (i in 1:nrow(dict.summary)) {
+  switch(dict$column_label[i],
+         
+         "user_id" = {
+           dict$description[i] = "user ID"
+           dict$type[i] = "ID number"
+           dict$value_range[i] = "NA"
+         },
+         
+         "date" = {
+           dict$description[i] = "date (yyyy-mm-dd)"
+           dict$type[i] = "date"
+           dict$value_range[i] = "NA"
+         },
+         
+         "total_duration" = {
+           dict$description[i] = "total duration in seconds"
+           dict$type[i] = "integer"
+           dict$value_range[i] = "0 to 240"
+         },
+         
+         "order" = {
+           dict$description[i] = "order in which each task was selected"
+           dict$type[i] = "integer"
+           dict$value_range[i] = "any integer greater than 0"
+         },
+         
+         "task" = {
+           dict$description[i] = "name of task selected"
+           dict$type[i] = "string"
+           dict$value_range[i] = "Card Sorting, Name Sorting, Dot to Dot, Word Search, or Spot Difference "
+         },
+         
+         "number_done" = {
+           dict$description[i] = "Card Sorting: number of cards sorted. Name Sorting: number of names moved. Dot to Dot: number of dot connected. Word Search: number of words found. Spot Difference: number of differences found."
+           dict$type[i] = "integer"
+           dict$value_range[i] = "any integer 0 or greater"
+         },
+         
+         "number_correct" = {
+           dict$description[i] = "Card Sorting: number of cards placed into correct suit pile. Name Sorting, Word Search, Dot to Dot, and Spot Difference: NA."
+           dict$type[i] = "integer"
+           dict$value_range[i] = "any integer 0 or greater"
+         }, 
+         
+         "score" = {
+           dict$description[i] = "Card Sorting: reflects correctness of order within suits. Name Sorting: number of names in the correct relative positions. Word Search, Dot to Dot, and Spot Difference: NA."
+           dict$type[i] = "integer"
+           dict$value_range[i] = "any integer 0 or greater"
+         }
+         
+  )
+}
 
 #---- clean up ----
 
