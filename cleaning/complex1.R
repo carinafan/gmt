@@ -13,6 +13,7 @@ names = c("user_id",
           "order",
           "task",
           "number_done",
+          "number_correct",
           "score",
           "duration")
 
@@ -99,6 +100,8 @@ for (i in 1:n) {
           filter(grepl("Item Moved. Score is:", tag2)) %>% 
           nrow()
         
+        temp_number_correct = NA
+        
         temp_score = raw_task_data %>% 
           filter(grepl("Item Moved. Score is:", tag2)) %>% 
           select(tag3) %>% 
@@ -115,15 +118,23 @@ for (i in 1:n) {
           filter(grepl("card sorted", tag2)) %>% 
           nrow()
         
-        temp_score = raw_task_data %>% 
+        temp_number_correct = raw_task_data %>% 
           filter(grepl("card sorted: correct", tag2)) %>% 
           nrow()
+        
+        temp_score = raw_task_data$tag3[tail(which(raw_task_data$tag2 == "card order changed. Score is:"), 1)]
+        
+        if (identical(temp_score, character(0))) {
+          temp_score = NA
+        }
         
       } else if (temp_task == "Dot to Dot") {
         
         temp_number_done = raw_task_data %>% 
           filter(grepl("Dot Connected", tag2)) %>% 
           nrow()
+        
+        temp_number_correct = NA
         
         temp_score = NA
         
@@ -133,6 +144,8 @@ for (i in 1:n) {
           filter(grepl("Word Found:", tag2)) %>% 
           nrow()
         
+        temp_number_correct = NA
+        
         temp_score = NA
         
       } else if (temp_task == "Spot Difference") {
@@ -140,6 +153,8 @@ for (i in 1:n) {
         temp_number_done = raw_task_data %>% 
           filter(grepl("Different Found", tag2)) %>% 
           nrow()
+        
+        temp_number_correct = NA
         
         temp_score = NA
         
@@ -149,6 +164,7 @@ for (i in 1:n) {
       
       temp_task = NA
       temp_number_done = NA
+      temp_number_correct = NA
       temp_score = NA
       
     }
@@ -166,6 +182,7 @@ for (i in 1:n) {
     temp_df$task[s] = temp_task
     temp_df$duration[s] = task_duration
     temp_df$number_done[s] = temp_number_done
+    temp_df$number_correct[s] = temp_number_correct
     temp_df$score[s] = temp_score
     
   }
@@ -179,6 +196,14 @@ for (i in 1:n) {
   # append participant dataframe to overall dataframe
   df %<>% rbind(temp_df)
 } 
+
+#---- hard code fixes ----
+
+df$task[43] = "Card Sorting"
+df$number_done[43] = 9
+df$score[43] = 8
+
+df = df[-c(116, 202), ]
 
 #---- data dictionary ----
 
@@ -232,22 +257,20 @@ for (i in 1:nrow(dict)) {
            dict$value_range[i] = "any integer 0 or greater"
          },
          
+         "number_correct" = {
+           dict$description[i] = "Card Sorting: number of cards placed into correct suit pile. Name Sorting, Word Search, Dot to Dot, and Spot Difference: NA."
+           dict$type[i] = "integer"
+           dict$value_range[i] = "any integer 0 or greater"
+         }, 
+         
          "score" = {
-           dict$description[i] = "Card Sorting: number of cards sorted correctly. Name Sorting: number of names in the correct relative positions. Word Search, Dot to Dot, and Spot Difference: NA."
+           dict$description[i] = "Card Sorting: reflects correctness of order within suits. Name Sorting: number of names in the correct relative positions. Word Search, Dot to Dot, and Spot Difference: NA."
            dict$type[i] = "integer"
            dict$value_range[i] = "any integer 0 or greater"
          }
 
   )
 }
-
-#---- hard code fixes ----
-
-df$task[43] = "Card Sorting"
-df$number_done[43] = 9
-df$score[43] = 8
-
-df = df[-c(116, 202), ]
 
 #---- clean up ----
 
