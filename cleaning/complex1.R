@@ -207,6 +207,8 @@ df$score[43] = 8
 
 df = df[-c(116, 202), ]
 
+row.names(df) = seq(1, nrow(df))
+
 #---- summary ----
 
 df = data.frame(matrix(data = NA, nrow = 0, ncol = length(names)))
@@ -307,7 +309,7 @@ participants %<>% append(nrow(df)+1)
 for (i in 1:length(participants)) {
   
   # pull participant's data from cleaned dataframe
-  participant_data = df[participants[i]:participants[i+1]-1, ]
+  participant_data = df[participants[i]:(participants[i+1]-1), ]
   
   # set up a temporary empty dataframe for summary scores
   temp_df = data.frame(matrix(data = NA, nrow = 1, ncol = length(names.summary)))
@@ -317,6 +319,119 @@ for (i in 1:length(participants)) {
   temp_df$user_id = participant_data$user_id[1]
   temp_df$date = participant_data$date[1]
   temp_df$total_duration = sum(participant_data$duration)
+  temp_df$switches = nrow(participant_data) - 1
+  temp_df$tasks_attempted = unique(participant_data$task) %>% length()
+  
+  ##### NEED TO FIGURE OUT HOW TO DEAL WHEN THEY DIDN'T DO A TASK
+  
+  ## card sort
+  
+  temp_df$card_score = 
+    participant_data %>% 
+    filter(task == "Card Sorting") %>% 
+    select(score) %>% 
+    drop_na() %>% 
+    tail(1) %>% 
+    pull() %>% 
+    as.numeric()
+  
+  if (temp_df$card_score == 10) {
+    temp_df$card_bonus = 5
+  } else {temp_df$card_bonus = 0}
+  
+  temp_df$card_number_sorted = 
+    participant_data %>% 
+    filter(task == "Card Sorting") %>% 
+    select(number_done) %>% 
+    sum()
+  
+  temp_df$card_number_sorted_correct = 
+    participant_data %>% 
+    filter(task == "Card Sorting") %>% 
+    select(number_correct) %>% 
+    sum()
+  
+  ## name sort
+  
+  temp_df$name_score = 
+    participant_data %>% 
+    filter(task == "Name Sorting") %>% 
+    select(score) %>% 
+    drop_na() %>% 
+    tail(1) %>% 
+    pull() %>% 
+    as.numeric()
+  
+  if (temp_df$name_score == 10) {
+    temp_df$name_bonus = 5
+  } else {temp_df$name_bonus = 0}
+  
+  temp_df$name_items_moved = 
+    participant_data %>% 
+    filter(task == "Name Sorting") %>% 
+    select(number_done) %>% 
+    sum()
+  
+  ## dot to dot
+  
+  temp_df$dot_score = 
+    participant_data %>% 
+    filter(task == "Dot to Dot") %>% 
+    select(number_done) %>% 
+    sum()
+  
+  if (temp_df$dot_score == 40) {
+    temp_df$dot_bonus = 10
+  } else (temp_df$dot_bonus = 0)
+  
+  ## word search
+  
+  temp_df$word_score = 
+    participant_data %>% 
+    filter(task == "Word Search") %>% 
+    select(number_done) %>% 
+    sum()
+  
+  if (temp_df$word_score == 16) {
+    temp_d$word_bonus = 5
+  } else (temp_df$word_bonus = 0)
+  
+  ## spot difference
+  
+  temp_df$difference_score = 
+    participant_data %>% 
+    filter(task == "Spot Difference") %>% 
+    select(number_done) %>% 
+    sum()
+  
+  if(temp_df$difference_score == 10) {
+    temp_df$difference_bonus = 5
+  } else (temp_df$difference_bonus = 0)
+  
+  # total bonus
+  if (temp_df$tasks_attempted == 5) {
+    temp_df$total_bonus = 10
+  } else (temp_df$total_bonus = 0)
+  
+  # total score
+  temp_df$total_score = 
+    temp_df$total_bonus %>% 
+    sum(temp_df$card_score) %>% 
+    sum(temp_df$card_bonus) %>% 
+    sum(temp_df$name_score) %>% 
+    sum(temp_df$name_bonus) %>% 
+    sum(temp_df$dot_score) %>% 
+    sum(temp_df$dot_bonus) %>% 
+    sum(temp_df$word_score) %>% 
+    sum(temp_df$word_bonus) %>% 
+    sum(temp_df$difference_score) %>% 
+    sum(temp_df$difference_bonus)
+  
+  temp_df %>% 
+    select()
+   
+  # append temp dataframe to full dataframe
+  df.summary %<>% rbind(temp_df)
   
 }
 
@@ -352,6 +467,18 @@ for (i in 1:nrow(dict.summary)) {
            dict$description[i] = "total duration in seconds"
            dict$type[i] = "integer"
            dict$value_range[i] = "0 to 240"
+         },
+         
+         "switches" = {
+           dict$description[i] = "number of task switches made"
+           dict$type[i] = "integer"
+           dict$value_range[i] = "0 or greater"
+         },
+         
+         "tasks_attempted" = {
+           dict$description[i] = "number of different tasks attempted"
+           dict$type[i] = "integer"
+           dict$value_range[i] = "1 to 5"
          }
          
   )
