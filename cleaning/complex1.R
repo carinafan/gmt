@@ -471,9 +471,15 @@ for (i in 1:length(participants)) {
   }
   
   # total bonus
-  if (temp_df$tasks_attempted == 5) {
+  if (temp_df$card_score > 0 & !is.na(temp_df$card_score) &
+      temp_df$name_score > 0 & !is.na(temp_df$name_score) &
+      temp_df$dot_score > 0 & !is.na(temp_df$dot_score) &
+      temp_df$word_score > 0 & !is.na(temp_df$word_score) &
+      temp_df$difference_score > 0 & !is.na(temp_df$difference_score)) { 
+    
     temp_df$total_bonus = 10
-  } else (temp_df$total_bonus = 0)
+    
+  } else {temp_df$total_bonus = 0}
   
   # total score
   temp_df$total_score = 
