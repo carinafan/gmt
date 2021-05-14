@@ -316,91 +316,147 @@ for (i in 1:length(participants)) {
   temp_df$switches = nrow(participant_data) - 1
   temp_df$tasks_attempted = unique(participant_data$task) %>% length()
   
-  ##### NEED TO FIGURE OUT HOW TO DEAL WHEN THEY DIDN'T DO A TASK
-  
   ## card sort
   
-  temp_df$card_score = 
-    participant_data %>% 
-    filter(task == "Card Sorting") %>% 
-    select(score) %>% 
-    drop_na() %>% 
-    tail(1) %>% 
-    pull() %>% 
-    as.numeric()
-  
-  if (temp_df$card_score == 10) {
-    temp_df$card_bonus = 5
-  } else {temp_df$card_bonus = 0}
-  
-  temp_df$card_number_sorted = 
-    participant_data %>% 
-    filter(task == "Card Sorting") %>% 
-    select(number_done) %>% 
-    sum()
-  
-  temp_df$card_number_sorted_correct = 
-    participant_data %>% 
-    filter(task == "Card Sorting") %>% 
-    select(number_correct) %>% 
-    sum()
+  if (participant_data %>% 
+      filter(task == "Card Sorting") %>% 
+      nrow() == 0) {
+    
+    temp_df$card_score = NA
+    temp_df$card_bonus = NA
+    temp_df$card_number_sorted = NA
+    temp_df$card_number_sorted_correct = NA
+    
+  } else {
+    
+    temp_df$card_score = 
+      participant_data %>% 
+      filter(task == "Card Sorting") %>% 
+      select(score) %>% 
+      drop_na() %>% 
+      tail(1) %>% 
+      pull() %>% 
+      as.numeric()
+    
+    if (temp_df$card_score == 10) {
+      temp_df$card_bonus = 5
+    } else {temp_df$card_bonus = 0}
+    
+    temp_df$card_number_sorted = 
+      participant_data %>% 
+      filter(task == "Card Sorting") %>% 
+      select(number_done) %>% 
+      sum()
+    
+    temp_df$card_number_sorted_correct = 
+      participant_data %>% 
+      filter(task == "Card Sorting") %>% 
+      select(number_correct) %>% 
+      sum() 
+    
+  }
   
   ## name sort
   
-  temp_df$name_score = 
-    participant_data %>% 
-    filter(task == "Name Sorting") %>% 
-    select(score) %>% 
-    drop_na() %>% 
-    tail(1) %>% 
-    pull() %>% 
-    as.numeric()
-  
-  if (temp_df$name_score == 10) {
-    temp_df$name_bonus = 5
-  } else {temp_df$name_bonus = 0}
-  
-  temp_df$name_items_moved = 
-    participant_data %>% 
-    filter(task == "Name Sorting") %>% 
-    select(number_done) %>% 
-    sum()
+  if (participant_data %>% 
+      filter(task == "Name Sorting") %>% 
+      nrow() == 0) {
+    
+    temp_df$name_score = NA
+    temp_df$name_bonus = NA
+    temp_df$name_items_moved = NA
+    
+  } else {
+    
+    temp_df$name_score = 
+      participant_data %>% 
+      filter(task == "Name Sorting") %>% 
+      select(score) %>% 
+      drop_na() %>% 
+      tail(1) %>% 
+      pull() %>% 
+      as.numeric()
+    
+    if (temp_df$name_score == 10) {
+      temp_df$name_bonus = 5
+    } else {temp_df$name_bonus = 0}
+    
+    temp_df$name_items_moved = 
+      participant_data %>% 
+      filter(task == "Name Sorting") %>% 
+      select(number_done) %>% 
+      sum()
+    
+  }
   
   ## dot to dot
   
-  temp_df$dot_score = 
-    participant_data %>% 
-    filter(task == "Dot to Dot") %>% 
-    select(number_done) %>% 
-    sum()
-  
-  if (temp_df$dot_score == 40) {
-    temp_df$dot_bonus = 10
-  } else (temp_df$dot_bonus = 0)
+  if (participant_data %>% 
+      filter(task == "Dot to Dot") %>% 
+      nrow() == 0) {
+    
+    temp_df$dot_score = NA
+    temp_df$dot_bonus = NA
+    
+  } else {
+    
+    temp_df$dot_score = 
+      participant_data %>% 
+      filter(task == "Dot to Dot") %>% 
+      select(number_done) %>% 
+      sum()
+    
+    if (temp_df$dot_score == 40) {
+      temp_df$dot_bonus = 10
+    } else (temp_df$dot_bonus = 0) 
+    
+  }
   
   ## word search
   
-  temp_df$word_score = 
-    participant_data %>% 
-    filter(task == "Word Search") %>% 
-    select(number_done) %>% 
-    sum()
-  
-  if (temp_df$word_score == 16) {
-    temp_d$word_bonus = 5
-  } else (temp_df$word_bonus = 0)
+  if (participant_data %>% 
+      filter(task == "Word Search") %>% 
+      nrow() == 0) {
+    
+    temp_df$word_score = NA
+    temp_df$word_bonus = NA
+    
+  } else {
+    
+    temp_df$word_score = 
+      participant_data %>% 
+      filter(task == "Word Search") %>% 
+      select(number_done) %>% 
+      sum()
+    
+    if (temp_df$word_score == 16) {
+      temp_d$word_bonus = 5
+    } else (temp_df$word_bonus = 0) 
+    
+  }
   
   ## spot difference
   
-  temp_df$difference_score = 
-    participant_data %>% 
-    filter(task == "Spot Difference") %>% 
-    select(number_done) %>% 
-    sum()
-  
-  if(temp_df$difference_score == 10) {
-    temp_df$difference_bonus = 5
-  } else (temp_df$difference_bonus = 0)
+  if (participant_data %>% 
+      filter(task == "Spot Difference") %>% 
+      nrow() == 0) {
+    
+    temp_df$difference_score = NA
+    temp_df$difference_bonus = NA
+    
+  } else {
+    
+    temp_df$difference_score = 
+      participant_data %>% 
+      filter(task == "Spot Difference") %>% 
+      select(number_done) %>% 
+      sum()
+    
+    if(temp_df$difference_score == 10) {
+      temp_df$difference_bonus = 5
+    } else (temp_df$difference_bonus = 0)
+    
+  }
   
   # total bonus
   if (temp_df$tasks_attempted == 5) {
@@ -410,20 +466,17 @@ for (i in 1:length(participants)) {
   # total score
   temp_df$total_score = 
     temp_df$total_bonus %>% 
-    sum(temp_df$card_score) %>% 
-    sum(temp_df$card_bonus) %>% 
-    sum(temp_df$name_score) %>% 
-    sum(temp_df$name_bonus) %>% 
-    sum(temp_df$dot_score) %>% 
-    sum(temp_df$dot_bonus) %>% 
-    sum(temp_df$word_score) %>% 
-    sum(temp_df$word_bonus) %>% 
-    sum(temp_df$difference_score) %>% 
-    sum(temp_df$difference_bonus)
+    sum(temp_df$card_score, na.rm = TRUE) %>% 
+    sum(temp_df$card_bonus, na.rm = TRUE) %>% 
+    sum(temp_df$name_score, na.rm = TRUE) %>% 
+    sum(temp_df$name_bonus, na.rm = TRUE) %>% 
+    sum(temp_df$dot_score, na.rm = TRUE) %>% 
+    sum(temp_df$dot_bonus, na.rm = TRUE) %>% 
+    sum(temp_df$word_score, na.rm = TRUE) %>% 
+    sum(temp_df$word_bonus, na.rm = TRUE) %>% 
+    sum(temp_df$difference_score, na.rm = TRUE) %>% 
+    sum(temp_df$difference_bonus, na.rm = TRUE)
   
-  temp_df %>% 
-    select()
-   
   # append temp dataframe to full dataframe
   df.summary %<>% rbind(temp_df)
   
