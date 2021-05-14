@@ -329,14 +329,26 @@ for (i in 1:length(participants)) {
     
   } else {
     
-    temp_df$card_score = 
-      participant_data %>% 
-      filter(task == "Card Sorting") %>% 
-      select(score) %>% 
-      drop_na() %>% 
-      tail(1) %>% 
-      pull() %>% 
-      as.numeric()
+    if (participant_data %>% 
+        filter(task == "Card Sorting") %>% 
+        select(score) %>% 
+        drop_na() %>% 
+        nrow() == 0) {
+      
+      temp_df$card_score = 0
+      
+    } else {
+     
+      temp_df$card_score = 
+        participant_data %>% 
+        filter(task == "Card Sorting") %>% 
+        select(score) %>% 
+        drop_na() %>% 
+        tail(1) %>% 
+        pull() %>% 
+        as.numeric()
+      
+    }
     
     if (temp_df$card_score == 10) {
       temp_df$card_bonus = 5
