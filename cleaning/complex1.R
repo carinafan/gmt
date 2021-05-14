@@ -209,12 +209,6 @@ df = df[-c(116, 202), ]
 
 row.names(df) = seq(1, nrow(df))
 
-#---- summary ----
-
-df = data.frame(matrix(data = NA, nrow = 0, ncol = length(names)))
-names(df) = names
-df$date %<>% ymd()
-
 #---- data dictionary ----
 
 # export column names
