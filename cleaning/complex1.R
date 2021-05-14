@@ -300,7 +300,7 @@ df.summary$date %<>% ymd_hms()
 participants = which(df$order == 1)
 participants %<>% append(nrow(df)+1)
 
-for (i in 1:length(participants)) {
+for (i in 1:(length(participants)-1)) {
   
   # pull participant's data from cleaned dataframe
   participant_data = df[participants[i]:(participants[i+1]-1), ]
