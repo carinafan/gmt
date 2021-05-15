@@ -13,9 +13,17 @@ names = c("user_id",
           "order",
           "task",
           "number_done",
+          "number_correct",
           "score",
           "stops",
           "duration")
+
+# set task names
+tasks = c("Card Sorting",
+          "Name Sorting",
+          "Dot to Dot",
+          "Spot Difference",
+          "Word Search")
 
 # find each task starts
 started = which(df_raw$tag2 == "Game Started")
@@ -30,13 +38,6 @@ started %<>% append(nrow(df_raw))
 df = data.frame(matrix(data = NA, nrow = 0, ncol = length(names)))
 names(df) = names
 df$date %<>% ymd()
-
-# set task names
-tasks = c("Card Sorting",
-          "Name Sorting",
-          "Dot to Dot",
-          "Spot Difference",
-          "Word Search")
 
 #---- pull data ----
 
@@ -100,6 +101,8 @@ for (i in 1:n) {
           filter(grepl("Item Moved. Score is:", tag2)) %>% 
           nrow()
         
+        temp_number_correct = NA
+        
         temp_score = raw_task_data %>% 
           filter(grepl("Item Moved. Score is:", tag2)) %>% 
           select(tag3) %>% 
@@ -116,15 +119,23 @@ for (i in 1:n) {
           filter(grepl("card sorted", tag2)) %>% 
           nrow()
         
-        temp_score = raw_task_data %>% 
+        temp_number_correct = raw_task_data %>% 
           filter(grepl("card sorted: correct", tag2)) %>% 
           nrow()
+        
+        temp_score = raw_task_data$tag3[tail(which(raw_task_data$tag2 == "Card sorted. Score is:"), 1)]
+        
+        if (identical(temp_score, character(0))) {
+          temp_score = NA
+        }
         
       } else if (temp_task == "Dot to Dot") {
         
         temp_number_done = raw_task_data %>% 
           filter(grepl("Dot Connected", tag2)) %>% 
           nrow()
+        
+        temp_number_correct = NA
         
         temp_score = NA
         
@@ -134,6 +145,8 @@ for (i in 1:n) {
           filter(grepl("Word Found:", tag2)) %>% 
           nrow()
         
+        temp_number_correct = NA
+        
         temp_score = NA
         
       } else if (temp_task == "Spot Difference") {
@@ -141,6 +154,8 @@ for (i in 1:n) {
         temp_number_done = raw_task_data %>% 
           filter(grepl("Different Found", tag2)) %>% 
           nrow()
+        
+        temp_number_correct = NA
         
         temp_score = NA
         
@@ -150,6 +165,7 @@ for (i in 1:n) {
       
       temp_task = NA
       temp_number_done = NA
+      temp_number_correct = NA
       temp_score = NA
       
     }
@@ -168,6 +184,7 @@ for (i in 1:n) {
     temp_df$task[s] = temp_task
     temp_df$duration[s] = task_duration
     temp_df$number_done[s] = temp_number_done
+    temp_df$number_correct[s] = temp_number_correct
     temp_df$score[s] = temp_score
     temp_df$stops[s] = task_stops
     
@@ -249,13 +266,19 @@ for (i in 1:nrow(dict)) {
          },
          
          "number_done" = {
-           dict$description[i] = "Card Sorting: number of cards sorted. Birthday Sorting: number of dates moved. Dot to Dot: number of dot connected. Word Search: number of words found. Spot Difference: number of differences found."
+           dict$description[i] = "Card Sorting: number of cards sorted. Name Sorting: number of names moved. Dot to Dot: number of dot connected. Word Search: number of words found. Spot Difference: number of differences found."
            dict$type[i] = "integer"
            dict$value_range[i] = "any integer 0 or greater"
          },
          
+         "number_correct" = {
+           dict$description[i] = "Card Sorting: number of cards placed into correct suit pile. Name Sorting, Word Search, Dot to Dot, and Spot Difference: NA."
+           dict$type[i] = "integer"
+           dict$value_range[i] = "any integer 0 or greater"
+         }, 
+         
          "score" = {
-           dict$description[i] = "Card Sorting: number of cards sorted correctly. Birthdate Sorting: number of dates in the correct relative positions. Word Search, Dot to Dot, and Spot Difference: NA."
+           dict$description[i] = "Card Sorting: reflects correctness of order within suits. Name Sorting: number of names in the correct relative positions. Word Search, Dot to Dot, and Spot Difference: NA."
            dict$type[i] = "integer"
            dict$value_range[i] = "any integer 0 or greater"
          },
@@ -268,6 +291,10 @@ for (i in 1:nrow(dict)) {
          
   )
 }
+
+#---- summary ----
+
+
 
 #---- clean up ----
 
