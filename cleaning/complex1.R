@@ -302,12 +302,12 @@ names.summary = c(
   "difference_score", "difference_bonus"
 )
 
+participants = which(df$order == 1)
+participants %<>% append(nrow(df)+1)
+
 df.summary = data.frame(matrix(data = NA, nrow = 0, ncol = length(names.summary)))
 names(df.summary) = names.summary
 df.summary$date %<>% ymd_hms()
-
-participants = which(df$order == 1)
-participants %<>% append(nrow(df)+1)
 
 for (i in 1:(length(participants)-1)) {
   
