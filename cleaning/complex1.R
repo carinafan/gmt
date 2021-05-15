@@ -295,11 +295,11 @@ names.summary = c(
   "tasks_attempted",
   "total_score",
   "total_bonus",
-  "card_score", "card_bonus", "card_number_sorted", "card_number_sorted_correct",
-  "name_score", "name_bonus", "name_items_moved",
-  "dot_score", "dot_bonus",
-  "word_score", "word_bonus",
-  "difference_score", "difference_bonus"
+  "card_duration", "card_score", "card_bonus", "card_number_sorted", "card_number_sorted_correct",
+  "name_duration", "name_score", "name_bonus", "name_items_moved",
+  "dot_duration", "dot_score", "dot_bonus",
+  "word_duration", "word_score", "word_bonus",
+  "difference_duration", "difference_score", "difference_bonus"
 )
 
 participants = which(df$order == 1)
@@ -331,12 +331,19 @@ for (i in 1:(length(participants)-1)) {
       filter(task == "Card Sorting") %>% 
       nrow() == 0) {
     
+    temp_df$card_duration = NA
     temp_df$card_score = NA
     temp_df$card_bonus = NA
     temp_df$card_number_sorted = NA
     temp_df$card_number_sorted_correct = NA
     
   } else {
+    
+    temp_df$card_duration = 
+      participant_data %>% 
+      filter(task == "Card Sorting") %>% 
+      select(duration) %>% 
+      sum()
     
     if (participant_data %>% 
         filter(task == "Card Sorting") %>% 
@@ -383,11 +390,18 @@ for (i in 1:(length(participants)-1)) {
       filter(task == "Name Sorting") %>% 
       nrow() == 0) {
     
+    temp_df$name_duration = NA
     temp_df$name_score = NA
     temp_df$name_bonus = NA
     temp_df$name_items_moved = NA
     
   } else {
+    
+    temp_df$name_duration = 
+      participant_data %>% 
+      filter(task == "Name Sorting") %>% 
+      select(duration) %>% 
+      sum()
     
     temp_df$name_score = 
       participant_data %>% 
@@ -416,10 +430,17 @@ for (i in 1:(length(participants)-1)) {
       filter(task == "Dot to Dot") %>% 
       nrow() == 0) {
     
+    temp_df$dot_duration = NA
     temp_df$dot_score = NA
     temp_df$dot_bonus = NA
     
   } else {
+    
+    temp_df$dot_duration = 
+      participant_data %>% 
+      filter(task == "Dot to Dot") %>% 
+      select(duration) %>% 
+      sum()
     
     temp_df$dot_score = 
       participant_data %>% 
@@ -439,10 +460,17 @@ for (i in 1:(length(participants)-1)) {
       filter(task == "Word Search") %>% 
       nrow() == 0) {
     
+    temp_df$word_duration = NA
     temp_df$word_score = NA
     temp_df$word_bonus = NA
     
   } else {
+    
+    temp_df$word_duration = 
+      participant_data %>% 
+      filter(task == "Word Search") %>% 
+      select(duration) %>% 
+      sum()
     
     temp_df$word_score = 
       participant_data %>% 
@@ -462,10 +490,17 @@ for (i in 1:(length(participants)-1)) {
       filter(task == "Spot Difference") %>% 
       nrow() == 0) {
     
+    temp_df$difference_duration = NA
     temp_df$difference_score = NA
     temp_df$difference_bonus = NA
     
   } else {
+    
+    temp_df$difference_duration = 
+      participant_data %>% 
+      filter(task == "Spot Difference") %>% 
+      select(duration) %>% 
+      sum()
     
     temp_df$difference_score = 
       participant_data %>% 
