@@ -552,42 +552,162 @@ dict.summary = names(df.summary) %>%
 names(dict.summary) = "column_label"
 
 # add columns to describe the variables in each column
-dict$description = NA
-dict$type = NA
-dict$value_range = NA
+dict.summary$description = NA
+dict.summary$type = NA
+dict.summary$value_range = NA
 
 # fill in dictionary
 for (i in 1:nrow(dict.summary)) {
-  switch(dict$column_label[i],
+  switch(dict.summary$column_label[i],
          
          "user_id" = {
-           dict$description[i] = "user ID"
-           dict$type[i] = "ID number"
-           dict$value_range[i] = "NA"
+           dict.summary$description[i] = "user ID"
+           dict.summary$type[i] = "ID number"
+           dict.summary$value_range[i] = "NA"
          },
          
          "date" = {
-           dict$description[i] = "date (yyyy-mm-dd)"
-           dict$type[i] = "date"
-           dict$value_range[i] = "NA"
+           dict.summary$description[i] = "date (yyyy-mm-dd)"
+           dict.summary$type[i] = "date"
+           dict.summary$value_range[i] = "NA"
          },
          
          "total_duration" = {
-           dict$description[i] = "total duration in seconds"
-           dict$type[i] = "integer"
-           dict$value_range[i] = "0 to 240"
+           dict.summary$description[i] = "total duration in seconds"
+           dict.summary$type[i] = "integer"
+           dict.summary$value_range[i] = "0 to 240"
          },
          
          "switches" = {
-           dict$description[i] = "number of task switches made"
-           dict$type[i] = "integer"
-           dict$value_range[i] = "0 or greater"
+           dict.summary$description[i] = "number of task switches made"
+           dict.summary$type[i] = "integer"
+           dict.summary$value_range[i] = "0 or greater"
          },
          
          "tasks_attempted" = {
-           dict$description[i] = "number of different tasks attempted"
-           dict$type[i] = "integer"
-           dict$value_range[i] = "1 to 5"
+           dict.summary$description[i] = "number of different tasks attempted"
+           dict.summary$type[i] = "integer"
+           dict.summary$value_range[i] = "1 to 5"
+         },
+         
+         "total_score" = {
+           dict.summary$description[i] = "sum of all task scores, task bonuses, and total bonus"
+           dict.summary$type[i] = "integer"
+           dict.summary$value_range[i] = "0 or greater"
+         },
+         
+         "total_bonus" = {
+           dict.summary$description[i] = "10 if score is at least 1 for each of the 5 tasks, otherwise 0"
+           dict.summary$type[i] = "integer"
+           dict.summary$value_range[i] = "0 or 10"
+         },
+         
+         "card_duration" = {
+           dict.summary$description[i] = "total time spent on Card Sorting (seconds)"
+           dict.summary$type[i] = "integer"
+           dict.summary$value_range[i] = "1-240 if participant did Card Sorting, NA if not"
+         },
+         
+         "card_score" = {
+           dict.summary$description[i] = "Card Sorting score"
+           dict.summary$type[i] = "integer"
+           dict.summary$value_range[i] = "0 to 10"
+         },
+         
+         "card_bonus" = {
+           dict.summary$description[i] = "Card Sorting bonus; 5 if Card Sorting score was perfect (10), otherwise 0"
+           dict.summary$type[i] = "integer"
+           dict.summary$value_range[i] = "0 or 5"
+         },
+         
+         "card_number_sorted" = {
+           dict.summary$description[i] = "total number of cards moved in Card Sorting"
+           dict.summary$type[i] = "integer"
+           dict.summary$value_range[i] = "0 or greater"
+         }, 
+         
+         "card_number_sorted_correct" = {
+           dict.summary$description[i] = "number of cards sorted into correct suit in Card Sorting"
+           dict.summary$type[i] = "integer"
+           dict.summary$value_range[i] = "0 or greater"
+         },
+         
+         "name_duration" = {
+           dict.summary$description[i] = "total time spent on Name Sorting (seconds)"
+           dict.summary$type[i] = "integer"
+           dict.summary$value_range[i] = "1-240 if participant did Name Sorting, NA if not"
+         },
+         
+         "name_score" = {
+           dict.summary$description[i] = "Name Sorting score"
+           dict.summary$type[i] = "integer"
+           dict.summary$value_range[i] = "0 to 10"
+         },
+         
+         "name_bonus" = {
+           dict.summary$description[i] = "Name Sorting bonus; 5 if Name Sorting score was perfect (10), otherwise 0"
+           dict.summary$type[i] = "integer"
+           dict.summary$value_range[i] = "0 or 5"
+         },
+         
+         "name_items_moved" = {
+           dict.summary$description[i] = "total number of names moved in Name Sorting"
+           dict.summary$type[i] = "integer"
+           dict.summary$value_range[i] = "0 or greater"
+         },
+         
+         "dot_duration" = {
+           dict.summary$description[i] = "total time spent on Dot to Dot (seconds)"
+           dict.summary$type[i] = "integer"
+           dict.summary$value_range[i] = "1-240 if participant did Dot to Dot, NA if not"
+         },
+         
+         "dot_score" = {
+           dict.summary$description[i] = "total number of dots connected in Dot to Dot"
+           dict.summary$type[i] = "integer"
+           dict.summary$value_range[i] = "0 to 40"
+         },
+         
+         "dot_bonus" = {
+           dict.summary$description[i] = "Dot to Dot bonus; 10 if Dot to Dot score was perfect (40), otherwise 0"
+           dict.summary$type[i] = "integer"
+           dict.summary$value_range[i] = "0 or 10"
+         },
+         
+         "word_duration" = {
+           dict.summary$description[i] = "total time spent on Word Search (seconds)"
+           dict.summary$type[i] = "integer"
+           dict.summary$value_range[i] = "1 to 240 if participant did Word Search, NA if not"
+         },
+         
+         "word_score" = {
+           dict.summary$description[i] = "total number of words found in Word Search"
+           dict.summary$type[i] = "integer"
+           dict.summary$value_range[i] = "0 to 16"
+         },
+         
+         "word_bonus" = {
+           dict.summary$description[i] = "Word Search bonus; 5 if Word Search score was perfect (16), otherwise 0"
+           dict.summary$type[i] = "integer"
+           dict.summary$value_range[i] = "0 or 5"
+         },
+         
+         "difference_duration" = {
+           dict.summary$description[i] = "total time spend on Spot Difference (seconds)"
+           dict.summary$type[i] = "integer"
+           dict.summary$value_range[i] = "1-240 if particpant did Spot Difference, NA if not"
+         },
+         
+         "difference_score" = {
+           dict.summary$description[i] = "total number of differences spotted in Spot Difference"
+           dict.summary$type[i] = "integer"
+           dict.summary$value_range[i] = "0 to 10"
+         },
+         
+         "difference_bonus" = {
+           dict.summary$description[i] = "Spot Difference bonus; 5 if Spot Difference score was perfect (10), otherwise 0"
+           dict.summary$type[i] = "integer"
+           dict.summary$value_range[i] = "0 or 5"
          }
          
   )
@@ -597,5 +717,8 @@ for (i in 1:nrow(dict.summary)) {
 
 df_complex1 = df
 dict_complex1 = dict
+
+df_complex1_summary = df.summary
+dict_complex1_summary = dict.summary
 
 rm(list= ls()[!(ls() %in% df_to_keep)])
