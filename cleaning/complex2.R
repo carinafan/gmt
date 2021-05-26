@@ -176,9 +176,26 @@ for (i in 1:n) {
       nrow()
     
     # pull duration
-    task_duration = raw_task_data$created_at[1] %>%
-      interval(raw_task_data$created_at[nrow(raw_task_data)]) %>%
-      time_length("seconds")
+    # task_duration = raw_task_data$created_at[1] %>%
+    #   interval(raw_task_data$created_at[nrow(raw_task_data)]) %>%
+    #   time_length("seconds")
+    
+    # pull duration
+    ## if there's a Task Switch or Game Ended row following the task, then calculate duration up to that row
+    ## if not, calculate duration up to the last trial of the current task
+    if (!is.na(raw_user_data$created_at[switches[s+1]])) {
+      
+      task_duration = raw_user_data$created_at[switches[s]] %>% 
+        interval(raw_user_data$created_at[switches[s+1]]) %>% 
+        time_length("seconds")
+      
+    } else {
+      
+      task_duration = raw_task_data$created_at[1] %>%
+        interval(raw_task_data$created_at[nrow(raw_task_data)]) %>%
+        time_length("seconds")
+      
+    }
 
     # fill in participant dataframe
     temp_df$task[s] = temp_task
