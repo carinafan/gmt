@@ -13,6 +13,7 @@ names = c("user_id",
           "order",
           "task",
           "number_done",
+          "number_correct",
           "score",
           "duration")
 
@@ -24,6 +25,7 @@ tasks = c("Card Sorting",
           "Word Search")
 
 # find each task starts
+df_raw %<>% filter(!tag2 == "Game Started")
 started = which(df_raw$tag2 == "Started")
 
 # number of starts
@@ -99,6 +101,8 @@ for (i in 1:n) {
           filter(grepl("Item Moved. Score is:", tag2)) %>% 
           nrow()
         
+        temp_number_correct = NA
+        
         temp_score = raw_task_data %>% 
           filter(grepl("Item Moved. Score is:", tag2)) %>% 
           select(tag3) %>% 
@@ -115,15 +119,23 @@ for (i in 1:n) {
           filter(grepl("card sorted", tag2)) %>% 
           nrow()
         
-        temp_score = raw_task_data %>% 
+        temp_number_correct = raw_task_data %>% 
           filter(grepl("card sorted: correct", tag2)) %>% 
           nrow()
+        
+        temp_score = raw_task_data$tag3[tail(which(raw_task_data$tag2 == "Card sorted. Score is:"), 1)]
+        
+        if (identical(temp_score, character(0))) {
+          temp_score = NA
+        }
         
       } else if (temp_task == "Dot to Dot") {
         
         temp_number_done = raw_task_data %>% 
           filter(grepl("Dot Connected", tag2)) %>% 
           nrow()
+        
+        temp_number_correct = NA
         
         temp_score = NA
         
@@ -133,6 +145,8 @@ for (i in 1:n) {
           filter(grepl("Word Found:", tag2)) %>% 
           nrow()
         
+        temp_number_correct = NA
+        
         temp_score = NA
         
       } else if (temp_task == "Spot Difference") {
@@ -140,6 +154,8 @@ for (i in 1:n) {
         temp_number_done = raw_task_data %>% 
           filter(grepl("Different Found", tag2)) %>% 
           nrow()
+        
+        temp_number_correct = NA
         
         temp_score = NA
         
@@ -149,13 +165,10 @@ for (i in 1:n) {
       
       temp_task = NA
       temp_number_done = NA
+      temp_number_correct = NA
       temp_score = NA
       
     }
-
-    # remove Game Started rows so they don't mess up duration
-    raw_task_data %<>%
-      filter(tag2 != "Game Started")
     
     # pull duration
     task_duration = raw_task_data$created_at[1] %>%
@@ -166,14 +179,14 @@ for (i in 1:n) {
     temp_df$task[s] = temp_task
     temp_df$duration[s] = task_duration
     temp_df$number_done[s] = temp_number_done
+    temp_df$number_correct[s] = temp_number_correct
     temp_df$score[s] = temp_score
     
   }
 
   # fill in remaining info
   temp_df$user_id = raw_user_data$user_id[1]
-  temp_df$date = raw_user_data$created_at[1] %>% 
-    date()
+  temp_df$date = raw_user_data$created_at[1]
   temp_df$order = seq(1:(length(switches) - 1))
   
   # append participant dataframe to overall dataframe
@@ -235,6 +248,12 @@ for (i in 1:nrow(dict)) {
            dict$type[i] = "integer"
            dict$value_range[i] = "any integer 0 or greater"
          },
+         
+         "number_correct" = {
+           dict$description[i] = "Card Sorting: number of cards placed into correct suit pile. Name Sorting, Word Search, Dot to Dot, and Spot Difference: NA."
+           dict$type[i] = "integer"
+           dict$value_range[i] = "any integer 0 or greater"
+         }, 
          
          "score" = {
            dict$description[i] = "Card Sorting: number of cards sorted correctly. Name Sorting: number of names in the correct relative positions. Word Search, Dot to Dot, and Spot Difference: NA."
