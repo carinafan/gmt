@@ -26,7 +26,6 @@ tasks = c("Card Sorting",
           "Word Search")
 
 # find each task starts
-# started = which(df_raw$tag2 == "Game Started")
 df_raw %<>% filter(! tag2 == "Game Started")
 started = which(df_raw$tag2 == "Started")
 
