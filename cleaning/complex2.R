@@ -132,9 +132,11 @@ for (i in 1:n) {
         
       } else if (temp_task == "Dot to Dot") {
         
-        temp_number_done = raw_task_data %>% 
-          filter(grepl("Dot Connected", tag2)) %>% 
-          nrow()
+        # temp_number_done = raw_task_data %>% 
+        #   filter(grepl("Dot Connected", tag2)) %>% 
+        #   nrow()
+        
+        temp_number_done = NA
         
         temp_number_correct = NA
         
@@ -219,7 +221,6 @@ df$number_done[28] = 16
 df$score[28] = 16
 
 df$task[29] = "Dot to Dot"
-df$number_done[29] = 0
 
 df$task[98] = NA
 df$number_done[98] = NA
