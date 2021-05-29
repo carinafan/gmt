@@ -461,15 +461,19 @@ for (i in 1:(length(participants)-1)) {
       select(duration) %>% 
       sum()
     
-    temp_df$dot_score = 
-      participant_data %>% 
-      filter(task == "Dot to Dot") %>% 
-      select(number_done) %>% 
-      sum()
+    # temp_df$dot_score = 
+    #   participant_data %>% 
+    #   filter(task == "Dot to Dot") %>% 
+    #   select(number_done) %>% 
+    #   sum()
     
-    if (temp_df$dot_score == 40) {
-      temp_df$dot_bonus = 10
-    } else (temp_df$dot_bonus = 0) 
+    temp_df$dot_score = NA
+    
+    # if (temp_df$dot_score == 40) {
+    #   temp_df$dot_bonus = 10
+    # } else (temp_df$dot_bonus = 0) 
+    
+    temp_df$dot_bonus = NA
     
   }
   
