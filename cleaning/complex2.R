@@ -538,15 +538,16 @@ for (i in 1:(length(participants)-1)) {
   }
   
   # total bonus
-  if (temp_df$card_score > 0 & !is.na(temp_df$card_score) &
-      temp_df$birthdate_score > 0 & !is.na(temp_df$birthdate_score) &
-      temp_df$dot_score > 0 & !is.na(temp_df$dot_score) &
-      temp_df$word_score > 0 & !is.na(temp_df$word_score) &
-      temp_df$difference_score > 0 & !is.na(temp_df$difference_score)) { 
-    
-    temp_df$total_bonus = 10
-    
-  } else {temp_df$total_bonus = 0}
+  
+  bonus = 0
+  
+  if (temp_df$card_score > 0 & !is.na(temp_df$card_score)) {bonus = bonus + 5}
+  if (temp_df$birthdate_score > 0 & !is.na(temp_df$birthdate_score)) {bonus = bonus + 5}
+  if (temp_df$dot_duration > 0 & !is.na(temp_df$dot_duration)) {bonus = bonus + 5}
+  if (temp_df$word_score > 0 & !is.na(temp_df$word_score)) {bonus = bonus + 5}
+  if (temp_df$difference_score > 0 & !is.na(temp_df$difference_score)) {bonus = bonus + 5}
+  
+  temp_df$total_bonus = bonus
   
   # total score
   temp_df$total_score = 
@@ -626,9 +627,9 @@ for (i in 1:nrow(dict.summary)) {
          },
          
          "total_bonus" = {
-           dict.summary$description[i] = "10 if score is at least 1 for each of the 5 tasks, otherwise 0"
+           dict.summary$description[i] = "5 per task where score > 0"
            dict.summary$type[i] = "integer"
-           dict.summary$value_range[i] = "0 or 10"
+           dict.summary$value_range[i] = "0 to 25, in increments of 5"
          },
          
          "card_duration" = {
@@ -750,4 +751,4 @@ dict_complex2 = dict
 df_complex2_summary = df.summary
 dict_complex2_summary = dict.summary
 
-rm(list= ls()[!(ls() %in% df_to_keep)])
+rm(list = ls()[!(ls() %in% df_to_keep)])
