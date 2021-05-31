@@ -1,10 +1,12 @@
 GMT Online Games – Data Cleaning
 ================
-Last updated: May 26, 2021
+Last updated: May 31, 2021
 
 -   [Fruit Clapping Tasks](#fruit-clapping-tasks)
 -   [Card Sorting Tasks](#card-sorting-tasks)
 -   [Complex Tasks](#complex-tasks)
+    -   [Complex 2 Dot to Dot scoring
+        issue](#complex-2-dot-to-dot-scoring-issue)
 -   [Export data](#export-data)
 -   [Session info](#session-info)
 
@@ -57,7 +59,7 @@ df_to_keep = c(
   "df_card4", "dict_card4",
   "df_complex1", "dict_complex1", "df_complex1_summary", "dict_complex1_summary",
   "df_complex2", "dict_complex2", "df_complex2_summary", "dict_complex2_summary",
-  "df_complex3", "dict_complex3"
+  "df_complex3", "dict_complex3", "df_complex3_summary", "dict_complex3_summary"
 )
 ```
 
@@ -116,6 +118,15 @@ participants where there was a Task Switch at the end of the
 participant’s data set, so I just removed the last task (it was unclear
 what they were switching to at the very end).
 
+## Complex 2 Dot to Dot scoring issue
+
+Right now, all the Dot to Dot scores for Complex 2 will be NA, because
+there’s stuff missing from the raw data output. THere’s no way for me to
+count the number of dots connected, and it looks like the back-end code
+for calculating scores/bonus scores is inconsistent. If the participant
+did Dot to Dot I can still pull number of stops and duration, but scores
+will be blank.
+
 <!-- ======================================================================= -->
 
 # Export data
@@ -131,7 +142,7 @@ list(fruit1 = df_fruit1,
      card4 = df_card4,
      complex1 = df_complex1, complex1_summary = df_complex1_summary,
      complex2 = df_complex2, complex2_summary = df_complex2_summary,
-     complex3 = df_complex3) %>% 
+     complex3 = df_complex3, complex3_summary = df_complex3_summary) %>%
   write_xlsx("../data/gmt_clean.xlsx")
 ```
 
@@ -146,7 +157,7 @@ list(fruit1 = dict_fruit1,
      card4 = dict_card4,
      complex1 = dict_complex1, complex1_summary = dict_complex1_summary,
      complex2 = dict_complex2, complex2_summary = dict_complex2_summary,
-     complex3 = dict_complex3) %>% 
+     complex3 = dict_complex3, complex3_summary = dict_complex3_summary) %>%
   write_xlsx("../data/gmt_dictionary.xlsx")
 ```
 

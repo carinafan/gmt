@@ -591,12 +591,6 @@ for (i in 1:nrow(dict.summary)) {
            dict.summary$value_range[i] = "0 or greater"
          },
          
-         "total_bonus" = {
-           dict.summary$description[i] = "10 if score is at least 1 for each of the 5 tasks, otherwise 0"
-           dict.summary$type[i] = "integer"
-           dict.summary$value_range[i] = "0 or 10"
-         },
-         
          "card_duration" = {
            dict.summary$description[i] = "total time spent on Card Sorting (seconds)"
            dict.summary$type[i] = "integer"
@@ -604,15 +598,15 @@ for (i in 1:nrow(dict.summary)) {
          },
          
          "card_score" = {
-           dict.summary$description[i] = "Card Sorting score"
+           dict.summary$description[i] = "Card Sorting score; 1100 if 1 suit is sorted correctly"
            dict.summary$type[i] = "integer"
-           dict.summary$value_range[i] = "0 to 10"
+           dict.summary$value_range[i] = "0 or 1100"
          },
          
          "card_bonus" = {
-           dict.summary$description[i] = "Card Sorting bonus; 5 if Card Sorting score was perfect (10), otherwise 0"
+           dict.summary$description[i] = "Card Sorting bonus; 100 if all 4 suits are sorted correctly"
            dict.summary$type[i] = "integer"
-           dict.summary$value_range[i] = "0 or 5"
+           dict.summary$value_range[i] = "0 or 100"
          },
          
          "card_number_sorted" = {
@@ -634,9 +628,9 @@ for (i in 1:nrow(dict.summary)) {
          },
          
          "name_score" = {
-           dict.summary$description[i] = "Name Sorting score"
+           dict.summary$description[i] = "Name Sorting score; 10 per name in correct position"
            dict.summary$type[i] = "integer"
-           dict.summary$value_range[i] = "0 to 10"
+           dict.summary$value_range[i] = "0 to 100, in increments of 10"
          },
          
          "name_items_moved" = {
@@ -652,15 +646,21 @@ for (i in 1:nrow(dict.summary)) {
          },
          
          "word_score" = {
-           dict.summary$description[i] = "total number of words found in Word Search"
+           dict.summary$description[i] = "Word Search score; 400 if 4 words are found"
            dict.summary$type[i] = "integer"
-           dict.summary$value_range[i] = "0 to 16"
+           dict.summary$value_range[i] = "0 or 400"
          },
          
          "word_bonus" = {
            dict.summary$description[i] = "Word Search bonus; 5 if Word Search score was perfect (16), otherwise 0"
            dict.summary$type[i] = "integer"
            dict.summary$value_range[i] = "0 or 5"
+         },
+         
+         "words_found" = {
+           dict.summary$description[i] = "total number of words found in Word Search"
+           dict.summary$type[i] = "integer"
+           dict.summary$value_range[i] = "0 to 15"
          },
          
          "difference_duration" = {
@@ -670,16 +670,22 @@ for (i in 1:nrow(dict.summary)) {
          },
          
          "difference_score" = {
+           dict.summary$description[i] = "Spot Difference score; 600 if 3 differences are found"
+           dict.summary$type[i] = "integer"
+           dict.summary$value_range[i] = "0 or 600"
+         },
+
+         "difference_bonus" = {
+           dict.summary$description[i] = "Spot Difference bonus; 100 if all 10 differences are found"
+           dict.summary$type[i] = "integer"
+           dict.summary$value_range[i] = "0 or 100"
+         },
+         
+         "differences_found" = {
            dict.summary$description[i] = "total number of differences spotted in Spot Difference"
            dict.summary$type[i] = "integer"
            dict.summary$value_range[i] = "0 to 10"
          },
-         
-         "difference_bonus" = {
-           dict.summary$description[i] = "Spot Difference bonus; 5 if Spot Difference score was perfect (10), otherwise 0"
-           dict.summary$type[i] = "integer"
-           dict.summary$value_range[i] = "0 or 5"
-         }
          
   )
 }
@@ -690,6 +696,6 @@ df_complex3 = df
 dict_complex3 = dict
 
 df_complex3_summary = df.summary
-# dict_complex3_summary = dict.summary
+dict_complex3_summary = dict.summary
 
-rm(list= ls()[!(ls() %in% df_to_keep)])
+rm(list = ls()[!(ls() %in% df_to_keep)])
