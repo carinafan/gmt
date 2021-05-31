@@ -113,7 +113,7 @@ for (i in 1:n) {
       } else if (temp_task == "Card Sorting") {
         
         temp_number_done = raw_task_data %>% 
-          filter(grepl("card sorted", tag2)) %>% 
+          filter(grepl("card sorted:", tag2)) %>% 
           nrow()
         
         temp_number_correct = raw_task_data %>% 
@@ -134,7 +134,7 @@ for (i in 1:n) {
         
         temp_number_correct = NA
         
-        temp_score = NA
+        temp_score = tail(raw_task_data$tag3, 1)
         
       } else if (temp_task == "Spot Difference") {
         
@@ -144,7 +144,7 @@ for (i in 1:n) {
         
         temp_number_correct = NA
         
-        temp_score = NA
+        temp_score = tail(raw_task_data$tag3, 1)
         
       }
       
@@ -260,11 +260,10 @@ names.summary = c(
   "switches",
   "tasks_attempted",
   "total_score",
-  "total_bonus",
   "card_duration", "card_score", "card_bonus", "card_number_sorted", "card_number_sorted_correct",
-  "name_duration", "name_score", "name_bonus", "name_items_moved",
-  "word_duration", "word_score", "word_bonus",
-  "difference_duration", "difference_score", "difference_bonus"
+  "name_duration", "name_score", "name_items_moved",
+  "word_duration", "word_score", "word_bonus", "words_found", 
+  "difference_duration", "difference_score", "difference_bonus", "differences_found"
 )
 
 participants = which(df$order == 1)
@@ -331,10 +330,6 @@ for (i in 1:(length(participants)-1)) {
       
     }
     
-    if (temp_df$card_score == 10) {
-      temp_df$card_bonus = 5
-    } else {temp_df$card_bonus = 0}
-    
     temp_df$card_number_sorted = 
       participant_data %>% 
       filter(task == "Card Sorting") %>% 
@@ -347,6 +342,10 @@ for (i in 1:(length(participants)-1)) {
       select(number_correct) %>% 
       sum() 
     
+    if (temp_df$card_number_sorted_correct == 24) {
+      temp_df$card_bonus = 100
+    } else {temp_df$card_bonus = 0}
+    
   }
   
   ## name sort
@@ -357,7 +356,6 @@ for (i in 1:(length(participants)-1)) {
     
     temp_df$name_duration = NA
     temp_df$name_score = NA
-    temp_df$name_bonus = NA
     temp_df$name_items_moved = NA
     
   } else {
@@ -377,45 +375,11 @@ for (i in 1:(length(participants)-1)) {
       pull() %>% 
       as.numeric()
     
-    if (temp_df$name_score == 10) {
-      temp_df$name_bonus = 5
-    } else {temp_df$name_bonus = 0}
-    
     temp_df$name_items_moved = 
       participant_data %>% 
       filter(task == "Name Sorting") %>% 
       select(number_done) %>% 
       sum()
-    
-  }
-  
-  ## dot to dot
-  
-  if (participant_data %>% 
-      filter(task == "Dot to Dot") %>% 
-      nrow() == 0) {
-    
-    temp_df$dot_duration = NA
-    temp_df$dot_score = NA
-    temp_df$dot_bonus = NA
-    
-  } else {
-    
-    temp_df$dot_duration = 
-      participant_data %>% 
-      filter(task == "Dot to Dot") %>% 
-      select(duration) %>% 
-      sum()
-    
-    temp_df$dot_score = 
-      participant_data %>% 
-      filter(task == "Dot to Dot") %>% 
-      select(number_done) %>% 
-      sum()
-    
-    if (temp_df$dot_score == 40) {
-      temp_df$dot_bonus = 10
-    } else (temp_df$dot_bonus = 0) 
     
   }
   
@@ -428,6 +392,7 @@ for (i in 1:(length(participants)-1)) {
     temp_df$word_duration = NA
     temp_df$word_score = NA
     temp_df$word_bonus = NA
+    temp_df$words_found = NA
     
   } else {
     
@@ -437,15 +402,21 @@ for (i in 1:(length(participants)-1)) {
       select(duration) %>% 
       sum()
     
-    temp_df$word_score = 
+    temp_df$words_found = 
       participant_data %>% 
       filter(task == "Word Search") %>% 
       select(number_done) %>% 
       sum()
     
-    if (temp_df$word_score == 16) {
-      temp_d$word_bonus = 5
-    } else (temp_df$word_bonus = 0) 
+    if (temp_df$words_found >= 4) {
+      temp_df$word_score = 400
+    }
+    
+    if (temp_df$words_found == 16) {
+      temp_df$word_bonus = 100
+    } else {
+      temp_df$word_bonus = 0
+    }
     
   }
   
@@ -458,6 +429,7 @@ for (i in 1:(length(participants)-1)) {
     temp_df$difference_duration = NA
     temp_df$difference_score = NA
     temp_df$difference_bonus = NA
+    temp_df$differences_found = NA
     
   } else {
     
@@ -467,38 +439,29 @@ for (i in 1:(length(participants)-1)) {
       select(duration) %>% 
       sum()
     
-    temp_df$difference_score = 
+    temp_df$differences_found = 
       participant_data %>% 
       filter(task == "Spot Difference") %>% 
       select(number_done) %>% 
       sum()
     
-    if(temp_df$difference_score == 10) {
-      temp_df$difference_bonus = 5
-    } else (temp_df$difference_bonus = 0)
+    if (temp_df$differences_found >= 3) {
+      temp_df$difference_score = 600
+    }
+    
+    if (temp_df$differences_found == 10) {
+      temp_df$difference_bonus = 100
+    } else {
+      temp_df$difference_bonus = 0
+    }
     
   }
   
-  # total bonus
-  if (temp_df$card_score > 0 & !is.na(temp_df$card_score) &
-      temp_df$name_score > 0 & !is.na(temp_df$name_score) &
-      temp_df$dot_score > 0 & !is.na(temp_df$dot_score) &
-      temp_df$word_score > 0 & !is.na(temp_df$word_score) &
-      temp_df$difference_score > 0 & !is.na(temp_df$difference_score)) { 
-    
-    temp_df$total_bonus = 10
-    
-  } else {temp_df$total_bonus = 0}
-  
   # total score
   temp_df$total_score = 
-    temp_df$total_bonus %>% 
-    sum(temp_df$card_score, na.rm = TRUE) %>% 
+    temp_df$card_score %>% 
     sum(temp_df$card_bonus, na.rm = TRUE) %>% 
     sum(temp_df$name_score, na.rm = TRUE) %>% 
-    sum(temp_df$name_bonus, na.rm = TRUE) %>% 
-    sum(temp_df$dot_score, na.rm = TRUE) %>% 
-    sum(temp_df$dot_bonus, na.rm = TRUE) %>% 
     sum(temp_df$word_score, na.rm = TRUE) %>% 
     sum(temp_df$word_bonus, na.rm = TRUE) %>% 
     sum(temp_df$difference_score, na.rm = TRUE) %>% 
@@ -609,34 +572,10 @@ for (i in 1:nrow(dict.summary)) {
            dict.summary$value_range[i] = "0 to 10"
          },
          
-         "name_bonus" = {
-           dict.summary$description[i] = "Name Sorting bonus; 5 if Name Sorting score was perfect (10), otherwise 0"
-           dict.summary$type[i] = "integer"
-           dict.summary$value_range[i] = "0 or 5"
-         },
-         
          "name_items_moved" = {
            dict.summary$description[i] = "total number of names moved in Name Sorting"
            dict.summary$type[i] = "integer"
            dict.summary$value_range[i] = "0 or greater"
-         },
-         
-         "dot_duration" = {
-           dict.summary$description[i] = "total time spent on Dot to Dot (seconds)"
-           dict.summary$type[i] = "integer"
-           dict.summary$value_range[i] = "1-240 if participant did Dot to Dot, NA if not"
-         },
-         
-         "dot_score" = {
-           dict.summary$description[i] = "total number of dots connected in Dot to Dot"
-           dict.summary$type[i] = "integer"
-           dict.summary$value_range[i] = "0 to 40"
-         },
-         
-         "dot_bonus" = {
-           dict.summary$description[i] = "Dot to Dot bonus; 10 if Dot to Dot score was perfect (40), otherwise 0"
-           dict.summary$type[i] = "integer"
-           dict.summary$value_range[i] = "0 or 10"
          },
          
          "word_duration" = {
