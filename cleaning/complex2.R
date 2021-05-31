@@ -501,8 +501,8 @@ for (i in 1:(length(participants)-1)) {
       select(number_done) %>% 
       sum()
     
-    if (temp_df$word_score == 16) {
-      temp_d$word_bonus = 5
+    if (temp_df$word_score == 15) {
+      temp_df$word_bonus = 5
     } else (temp_df$word_bonus = 0) 
     
   }
@@ -717,7 +717,7 @@ for (i in 1:nrow(dict.summary)) {
          },
          
          "word_bonus" = {
-           dict.summary$description[i] = "Word Search bonus; 5 if Word Search score was perfect (16), otherwise 0"
+           dict.summary$description[i] = "Word Search bonus; 5 if Word Search score was perfect (15), otherwise 0"
            dict.summary$type[i] = "integer"
            dict.summary$value_range[i] = "0 or 5"
          },
