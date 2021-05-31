@@ -136,6 +136,10 @@ for (i in 1:n) {
         
         temp_score = tail(raw_task_data$tag3, 1)
         
+        if (identical(temp_score, character(0))) {
+          temp_score = NA
+        }
+        
       } else if (temp_task == "Spot Difference") {
         
         temp_number_done = raw_task_data %>% 
@@ -145,6 +149,10 @@ for (i in 1:n) {
         temp_number_correct = NA
         
         temp_score = tail(raw_task_data$tag3, 1)
+        
+        if (identical(temp_score, character(0))) {
+          temp_score = NA
+        }
         
       }
       
@@ -157,10 +165,27 @@ for (i in 1:n) {
       
     }
     
+    # # pull duration
+    # task_duration = raw_task_data$created_at[1] %>%
+    #   interval(raw_task_data$created_at[nrow(raw_task_data)]) %>%
+    #   time_length("seconds")
+    
     # pull duration
-    task_duration = raw_task_data$created_at[1] %>%
-      interval(raw_task_data$created_at[nrow(raw_task_data)]) %>%
-      time_length("seconds")
+    ## if there's a Task Switch or Game Ended row following the task, then calculate duration up to that row
+    ## if not, calculate duration up to the last trial of the current task
+    if (!is.na(raw_user_data$created_at[switches[s+1]])) {
+      
+      task_duration = raw_user_data$created_at[switches[s]] %>% 
+        interval(raw_user_data$created_at[switches[s+1]]) %>% 
+        time_length("seconds")
+      
+    } else {
+      
+      task_duration = raw_task_data$created_at[1] %>%
+        interval(raw_task_data$created_at[nrow(raw_task_data)]) %>%
+        time_length("seconds")
+      
+    }
 
     # fill in participant dataframe
     temp_df$task[s] = temp_task
@@ -402,6 +427,27 @@ for (i in 1:(length(participants)-1)) {
       select(duration) %>% 
       sum()
     
+    if (participant_data %>% 
+        filter(task == "Word Search") %>% 
+        select(score) %>% 
+        drop_na() %>% 
+        nrow() == 0) {
+      
+      temp_df$word_score = 0
+      
+    } else {
+      
+      temp_df$word_score = 
+        participant_data %>% 
+        filter(task == "Word Search") %>% 
+        select(score) %>% 
+        drop_na() %>% 
+        tail(1) %>% 
+        pull() %>% 
+        as.numeric()
+      
+    }
+    
     temp_df$words_found = 
       participant_data %>% 
       filter(task == "Word Search") %>% 
@@ -412,7 +458,7 @@ for (i in 1:(length(participants)-1)) {
       temp_df$word_score = 400
     }
     
-    if (temp_df$words_found == 16) {
+    if (temp_df$words_found == 15) {
       temp_df$word_bonus = 100
     } else {
       temp_df$word_bonus = 0
@@ -444,6 +490,27 @@ for (i in 1:(length(participants)-1)) {
       filter(task == "Spot Difference") %>% 
       select(number_done) %>% 
       sum()
+    
+    if (participant_data %>% 
+        filter(task == "Spot Difference") %>% 
+        select(score) %>% 
+        drop_na() %>% 
+        nrow() == 0) {
+      
+      temp_df$difference_score = 0
+      
+    } else {
+      
+      temp_df$difference_score = 
+        participant_data %>% 
+        filter(task == "Spot Difference") %>% 
+        select(score) %>% 
+        drop_na() %>% 
+        tail(1) %>% 
+        pull() %>% 
+        as.numeric()
+      
+    }
     
     if (temp_df$differences_found >= 3) {
       temp_df$difference_score = 600
@@ -621,5 +688,8 @@ for (i in 1:nrow(dict.summary)) {
 
 df_complex3 = df
 dict_complex3 = dict
+
+df_complex3_summary = df.summary
+# dict_complex3_summary = dict.summary
 
 rm(list= ls()[!(ls() %in% df_to_keep)])
