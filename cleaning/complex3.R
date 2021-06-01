@@ -14,6 +14,7 @@ names = c("user_id",
           "task",
           "number_done",
           "number_correct",
+          "number_extra",
           "score",
           "duration")
 
@@ -100,6 +101,8 @@ for (i in 1:n) {
         
         temp_number_correct = NA
         
+        temp_number_extra = NA
+        
         temp_score = raw_task_data %>% 
           filter(grepl("Item Moved. Score is:", tag2)) %>% 
           select(tag3) %>% 
@@ -120,6 +123,15 @@ for (i in 1:n) {
           filter(grepl("card sorted: correct", tag2)) %>% 
           nrow()
         
+        # count the number of rows where score is 1100
+        temp_number_extra = raw_task_data %>% 
+          filter(tag3 == "1100") %>%
+          nrow()
+        
+        if (identical(temp_number_extra, character(0))) {
+          temp_number_extra = 0
+        }
+        
         temp_score = raw_task_data$tag3[tail(which(raw_task_data$tag2 == "Card sorted. Score is:"), 1)]
         
         if (identical(temp_score, character(0))) {
@@ -133,6 +145,8 @@ for (i in 1:n) {
           nrow()
         
         temp_number_correct = NA
+        
+        temp_number_extra = NA
         
         temp_score = tail(raw_task_data$tag3, 1)
         
@@ -148,6 +162,8 @@ for (i in 1:n) {
         
         temp_number_correct = NA
         
+        temp_number_extra = NA
+        
         temp_score = tail(raw_task_data$tag3, 1)
         
         if (identical(temp_score, character(0))) {
@@ -161,6 +177,7 @@ for (i in 1:n) {
       temp_task = NA
       temp_number_done = NA
       temp_number_correct = NA
+      temp_number_extra = NA
       temp_score = NA
       
     }
@@ -192,6 +209,7 @@ for (i in 1:n) {
     temp_df$duration[s] = task_duration
     temp_df$number_done[s] = temp_number_done
     temp_df$number_correct[s] = temp_number_correct
+    temp_df$number_extra[s] = temp_number_extra
     temp_df$score[s] = temp_score
     
   }
@@ -200,6 +218,15 @@ for (i in 1:n) {
   temp_df$user_id = raw_user_data$user_id[1]
   temp_df$date = raw_user_data$created_at[1]
   temp_df$order = seq(1:(length(switches) - 1))
+  
+  # adjust card sorting number extra
+  # for the first instance where they got a score of 1100, 
+  # we have to subtract that first card because it's not technically extra
+  temp_rownum =
+    head(which(temp_df$task == "Card Sorting" & temp_df$number_extra > 0), 1)
+  if (!identical(temp_rownum, character(0))) {
+    temp_df$number_extra[temp_rownum] = temp_df$number_extra[temp_rownum] - 1
+  }
   
   # append participant dataframe to overall dataframe
   df %<>% rbind(temp_df)
@@ -266,6 +293,12 @@ for (i in 1:nrow(dict)) {
            dict$type[i] = "integer"
            dict$value_range[i] = "any integer 0 or greater"
          }, 
+         
+         "number_extra" = {
+           dict$description[i] = "Card Sorting: number of cards sorted after 1 suit had already been completed. Name Sorting, Word Search, and Spot Difference: NA."
+           dict$type[i] = "integer"
+           dict$value_range[i] = "0 to 18"
+         },
          
          "score" = {
            dict$description[i] = "Card Sorting: number of cards sorted correctly. Name Sorting: number of names in the correct relative positions. Word Search, and Spot Difference: NA."
