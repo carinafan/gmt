@@ -7,5 +7,6 @@
 *.html
 
 # directories
+admin/
 data/
 notes/
