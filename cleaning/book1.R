@@ -8,6 +8,7 @@ df_raw = read_excel("../data/iago/event_clean.xlsx",
 # set column names
 names = c("user_id",
           "date",
+          "order",
           "task",
           "switch_duration",
           "duration",
@@ -32,7 +33,7 @@ started %<>% append(nrow(df_raw))
 # set up empty dataframe
 df = data.frame(matrix(data = NA, nrow = 0, ncol = length(names)))
 names(df) = names
-df$date %<>% ymd()
+df$date %<>% ymd_hms()
 
 #---- pull data ----
 
@@ -44,27 +45,85 @@ for (i in 1:n) {
   raw_user_data = df_raw[range, ]
   
   # find task switches
-  # switches = 1 %>% # set the first row for subsetting
-  #   append(which(raw_user_data$tag2 == "Task Switch")) %>% 
-  #   append(which(raw_user_data$tag2 == "Game Ended")[1])
-  switches = 1 %>% # set the first row for subsetting
-    append(which(grepl("Selecting Task", raw_user_data$tag2))) %>%
+  switches = 
+    which(grepl("Selecting Task", raw_user_data$tag2)) %>%
     append(which(grepl("Revision Started", raw_user_data$tag2))) %>% 
     sort()
+  
+  if (identical(switches, integer(0))) { # if there are only Game Ended rows
+    next 
+  }
+  
+  if (grepl("Game Ended", raw_user_data$tag2[nrow(raw_user_data)])) {
+    switches %<>% 
+      append(head(which(raw_user_data$tag2 == "Game Ended"), 1))
+  } else {
+    switches %<>%
+      append(nrow(raw_user_data) + 1)
+  }
   
   # pull user ID
   temp_id = raw_user_data$user_id[1]
   
   # set up participant dataframe
-  temp_df = matrix(data = NA, nrow = 1, ncol = length(names)) %>%
+  temp_df = matrix(data = NA, 
+                   nrow = length(switches) - 1, 
+                   ncol = length(names)) %>%
     data.frame()
   
   names(temp_df) = names
   
   temp_df$user_id = raw_user_data$user_id[1]
   
-  temp_df$date = raw_user_data$created_at[1] %>% 
-    date()
+  temp_df$date %<>% ymd_hms()
+  
+  temp_df$order = seq(1, (length(switches) - 1))
+ 
+  # fill in task data
+  for (s in 1:(length(switches) - 1)) {
+    
+    # subset task rows
+    task_range = switches[s]:(switches[s+1]-1)
+    raw_task_data = raw_user_data[task_range, ]
+    
+    # date
+    temp_date = raw_task_data$created_at[1]
+    temp_df$date[s] = temp_date
+    
+    # task
+    temp_task = raw_task_data$tag2[1]
+    
+    if (grepl("Selecting Task", temp_task)) {
+      
+      temp_task %<>% strsplit(" ")
+      temp_task = temp_task[[1]][3] 
+        
+    } 
+    
+    if (grepl("Revision Started", temp_task)) {
+      
+      temp_task %<>% strsplit(" ")
+      temp_task = temp_task[[1]][2]
+      
+    }
+    
+    temp_df$task[s] = temp_task
+
+    # switch duration
+    temp_switch = raw_user_data$created_at[(switches[s]-1)] %>% 
+      interval(raw_task_data$created_at[1]) %>% 
+      time_length("seconds")
+    
+    temp_df$switch_duration[s] = temp_switch
+    
+    # duration
+    temp_duration = raw_task_data$created_at[1] %>% 
+      interval(raw_task_data$created_at[nrow(raw_task_data)]) %>% 
+      time_length("seconds")
+    
+    temp_df$duration[s] = temp_duration
+    
+  }
   
   # append participant dataframe to overall dataframe
   df %<>% rbind(temp_df)
