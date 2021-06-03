@@ -123,6 +123,25 @@ for (i in 1:n) {
     
     temp_df$duration[s] = temp_duration
     
+    # submitted
+    if (!grepl("Submitted", raw_task_data$tag2) %>% any()) {
+      
+      temp_df$submitted[s] = "no"
+      
+    } else {
+      
+      if (raw_task_data$tag3[which(grepl("Submitted", raw_task_data$tag2))] ==
+          "Correct: true") {
+        temp_df$submitted[s] = "correct"
+      }
+      
+      if (raw_task_data$tag3[which(grepl("Submitted", raw_task_data$tag2))] ==
+          "Correct: false") {
+        temp_df$submitted[s] = "incorrect"
+      }
+        
+    }
+    
   }
   
   # append participant dataframe to overall dataframe
