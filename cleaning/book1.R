@@ -155,16 +155,6 @@ for (i in 1:n) {
     temp_receipts = raw_task_data %>% 
       filter(grepl("Receipt", tag2))
     
-    ## account
-    # temp_account = raw_task_data$tag2[grepl("Selecting Account", raw_task_data$tag2)] %>% 
-    #   strsplit(" ")
-    # temp_account_chosen = temp_account[[1]][3]
-    # temp_account_correct = temp_account[[1]][6]
-    # 
-    # if (temp_account_chosen != temp_account_correct) {
-    #   temp_df$incorrect_account[s] = nrow(temp_receipts)
-    # }
-      
     # ## task 1
     # 
     # if (temp_task == "1") {
@@ -219,10 +209,6 @@ for (i in 1:n) {
           }
 
         }
-        #   
-        # }
-      #   
-      # }
         
       }
       
