@@ -5,6 +5,14 @@ df_raw = read_excel("../data/iago/event_clean.xlsx",
                     sheet = "Bookkeeping Task 1") %>% 
   as.data.frame()
 
+# answer key
+task3_receipts = c(
+  "Receipt: Amount $80, billing: 20-Jun, payment: 13-Aug, filing: 03-Oct",
+  "Receipt: Amount $80, billing: 14-Oct, payment: 18-Nov, filing: 10-Dec",
+  "Receipt: Amount $60, billing: 05-Jun, payment: 11-Jul, filing: 26-Jul",
+  "Receipt: Amount $75, billing: 13-Aug, payment: 09-Sep, filing: 11-Sep"
+)
+
 # set column names
 names = c("user_id",
           "date",
@@ -13,11 +21,11 @@ names = c("user_id",
           "switch_duration",
           "duration",
           "submitted",
+          "method",
           "correct",
           "incorrect",
           "incorrect_date",
           "incorrect_type",
-          "incorrect_method",
           "incorrect_account"
           )
 
@@ -78,6 +86,12 @@ for (i in 1:n) {
   temp_df$date %<>% ymd_hms()
   
   temp_df$order = seq(1, (length(switches) - 1))
+  
+  temp_df$correct = 0
+  temp_df$incorrect = 0
+  temp_df$incorrect_date = 0
+  temp_df$incorrect_type = 0
+  temp_df$incorrect_account = 0
  
   # fill in task data
   for (s in 1:(length(switches) - 1)) {
@@ -125,20 +139,90 @@ for (i in 1:n) {
     
     # submitted
     if (!grepl("Submitted", raw_task_data$tag2) %>% any()) {
-      
       temp_df$submitted[s] = "no"
-      
     } else {
-      
       if (raw_task_data$tag3[which(grepl("Submitted", raw_task_data$tag2))] ==
           "Correct: true") {
         temp_df$submitted[s] = "correct"
       }
-      
       if (raw_task_data$tag3[which(grepl("Submitted", raw_task_data$tag2))] ==
           "Correct: false") {
         temp_df$submitted[s] = "incorrect"
       }
+    } 
+      
+    # receipt scoring
+    temp_receipts = raw_task_data %>% 
+      filter(grepl("Receipt", tag2))
+    
+    ## account
+    # temp_account = raw_task_data$tag2[grepl("Selecting Account", raw_task_data$tag2)] %>% 
+    #   strsplit(" ")
+    # temp_account_chosen = temp_account[[1]][3]
+    # temp_account_correct = temp_account[[1]][6]
+    # 
+    # if (temp_account_chosen != temp_account_correct) {
+    #   temp_df$incorrect_account[s] = nrow(temp_receipts)
+    # }
+      
+    # ## task 1
+    # 
+    # if (temp_task == "1") {
+    #   
+    # }
+    #   
+    # ## task 2
+    # 
+    # if (temp_task == "2") {
+    #     
+    #     
+    # }
+      
+    ## task 3
+      
+    if (temp_task == "3") {
+      
+      # method
+      if (any(grepl("Average Selected", raw_task_data$tag2))) {
+        temp_df$method[s] = "incorrect"
+      } 
+      
+      if (any(grepl("Sum Selected", raw_task_data$tag2))) {
+        temp_df$method[s] = "correct"
+      }
+      
+      for (r in 1:nrow(temp_receipts)) {
+        
+        temp_receipt = temp_receipts$tag2[r] %>% 
+          strsplit(", duplicate")
+        
+        ### correct 
+        if (temp_receipt[[1]][1] %in% task3_receipts &
+            grepl("false", temp_receipt[[1]][2])) {
+          
+          temp_df$correct[s] = temp_df$correct[s] + 1
+          
+        }  else {
+
+          ### incorrect
+          temp_df$incorrect[s] = temp_df$incorrect[s] + 1
+
+          ### incorrect account
+          temp_account = temp_receipt[[1]][2] %>% 
+            strsplit("Account ")
+          temp_account = temp_account[[1]][2] %>% 
+            strsplit(" Selected")
+          temp_account = temp_account[[1]][1]
+            
+          if (temp_account != "1937") {
+            temp_df$incorrect_accountp[s] = temp_df$incorrect_account[s] + 1
+          }
+
+        }
+        #   
+        # }
+      #   
+      # }
         
     }
     
