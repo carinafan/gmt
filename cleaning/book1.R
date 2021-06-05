@@ -93,6 +93,7 @@ for (i in 1:n) {
   temp_df$incorrect_date = 0
   temp_df$incorrect_type = 0
   temp_df$incorrect_account = 0
+  temp_df$incorrect_duplicate = 0
  
   # fill in task data
   for (s in 1:(length(switches) - 1)) {
@@ -158,53 +159,57 @@ for (i in 1:n) {
       select(tag2) %>% 
       filter(!grepl("Submitted", tag2))
     
-    temp_receipt_list = vector(mode = "character")
-     
-    for (r in 1:nrow(temp_receipt_df)) {
+    if (nrow(temp_receipt_df > 0)) {
       
-      ## split up receipt info
+      temp_receipt_list = vector(mode = "character")
       
-      temp_receipt = temp_receipt_df$tag2[r] %>%
-        str_split(", duplicate: ")
-
-      temp_receipt_df$receipt[r] = temp_receipt[[1]][1]
-
-      temp_receipt = temp_receipt[[1]][2] %>%
-        strsplit(", ")
-
-      temp_receipt_df$duplicate[r] = temp_receipt[[1]][1]
-
-      temp_receipt = temp_receipt[[1]][2] %>%
-        strsplit(" ")
-
-      temp_receipt_df$account[r] = temp_receipt[[1]][3]
-
-      temp_receipt_df$select[r] = temp_receipt[[1]][4]
-      
-      ## pull receipts into list
-      
-      if (temp_receipt_df$select[r] == "Selected") {
+      for (r in 1:nrow(temp_receipt_df)) {
         
-        temp_receipt = temp_receipt_df$receipt[r]
+        ## split up receipt info
         
-        if (temp_receipt_df$duplicate[r] == "true") {
-          temp_receipt %<>% paste0(", duplicate")
+        temp_receipt = temp_receipt_df$tag2[r] %>%
+          str_split(", duplicate: ")
+        
+        temp_receipt_df$receipt[r] = temp_receipt[[1]][1]
+        
+        temp_receipt = temp_receipt[[1]][2] %>%
+          strsplit(", ")
+        
+        temp_receipt_df$duplicate[r] = temp_receipt[[1]][1]
+        
+        temp_receipt = temp_receipt[[1]][2] %>%
+          strsplit(" ")
+        
+        temp_receipt_df$account[r] = temp_receipt[[1]][3]
+        
+        temp_receipt_df$select[r] = temp_receipt[[1]][4]
+        
+        ## pull receipts into list
+        
+        if (temp_receipt_df$select[r] == "Selected") {
+          
+          temp_receipt = temp_receipt_df$receipt[r]
+          
+          if (temp_receipt_df$duplicate[r] == "true") {
+            temp_receipt %<>% paste0(", duplicate")
+          }
+          
+          temp_receipt_list %<>% append(temp_receipt)
+          
         }
-
-        temp_receipt_list %<>% append(temp_receipt)
-
-      }
-
-      if (temp_receipt_df$select[r] == "Deselected") {
-
-        temp_deselect = which(temp_receipt_list == temp_receipt_df$receipt[r]) %>% 
-          head(1)
         
-        temp_receipt_list = temp_receipt_list[-temp_deselect]
-
+        if (temp_receipt_df$select[r] == "Deselected") {
+          
+          temp_deselect = which(temp_receipt_list == temp_receipt_df$receipt[r]) %>% 
+            head(1)
+          
+          temp_receipt_list = temp_receipt_list[-temp_deselect]
+          
+        }
+        
       }
-
     }
+    
     
     
     # 
