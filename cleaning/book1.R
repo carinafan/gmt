@@ -26,7 +26,8 @@ names = c("user_id",
           "incorrect",
           "incorrect_date",
           "incorrect_type",
-          "incorrect_account"
+          "incorrect_account",
+          "incorrect_duplicate"
           )
 
 # find each task starts
@@ -152,8 +153,67 @@ for (i in 1:n) {
     } 
       
     # receipt scoring
-    temp_receipts = raw_task_data %>% 
-      filter(grepl("Receipt", tag2))
+    temp_receipt_df = raw_task_data %>% 
+      filter(grepl("Receipt", tag2)) %>% 
+      select(tag2) %>% 
+      filter(!grepl("Submitted", tag2))
+    
+    temp_receipt_list = vector(mode = "character")
+     
+    for (r in 1:nrow(temp_receipt_df)) {
+      
+      ## split up receipt info
+      
+      temp_receipt = temp_receipt_df$tag2[r] %>%
+        str_split(", duplicate: ")
+
+      temp_receipt_df$receipt[r] = temp_receipt[[1]][1]
+
+      temp_receipt = temp_receipt[[1]][2] %>%
+        strsplit(", ")
+
+      temp_receipt_df$duplicate[r] = temp_receipt[[1]][1]
+
+      temp_receipt = temp_receipt[[1]][2] %>%
+        strsplit(" ")
+
+      temp_receipt_df$account[r] = temp_receipt[[1]][3]
+
+      temp_receipt_df$select[r] = temp_receipt[[1]][4]
+      
+      ## pull receipts into list
+      
+      if (temp_receipt_df$select[r] == "Selected") {
+        
+        temp_receipt = temp_receipt_df$receipt[r]
+        
+        if (temp_receipt_df$duplicate[r] == "true") {
+          temp_receipt %<>% paste0(", duplicate")
+        }
+
+        temp_receipt_list %<>% append(temp_receipt)
+
+      }
+
+      if (temp_receipt_df$select[r] == "Deselected") {
+
+        temp_deselect = which(temp_receipt_list == temp_receipt_df$receipt[r]) %>% 
+          head(1)
+        
+        temp_receipt_list = temp_receipt_list[-temp_deselect]
+
+      }
+
+    }
+    
+    
+    # 
+    # # remove deselected receipts
+    # temp_deselect = temp_receipts %>% 
+    #   filter(select == "Deselected")
+    # for (r in 1:nrow(temp_deselect)) {
+    #   temp_deselect_row = 
+    # }
     
     # ## task 1
     # 
@@ -170,49 +230,59 @@ for (i in 1:n) {
       
     ## task 3
       
-    if (temp_task == "3") {
-      
-      # method
-      if (any(grepl("Average Selected", raw_task_data$tag2))) {
-        temp_df$method[s] = "incorrect"
-      } 
-      
-      if (any(grepl("Sum Selected", raw_task_data$tag2))) {
-        temp_df$method[s] = "correct"
-      }
-      
-      for (r in 1:nrow(temp_receipts)) {
-        
-        temp_receipt = temp_receipts$tag2[r] %>% 
-          strsplit(", duplicate")
-        
-        ### correct 
-        if (temp_receipt[[1]][1] %in% task3_receipts &
-            grepl("false", temp_receipt[[1]][2])) {
-          
-          temp_df$correct[s] = temp_df$correct[s] + 1
-          
-        }  else {
-
-          ### incorrect
-          temp_df$incorrect[s] = temp_df$incorrect[s] + 1
-
-          ### incorrect account
-          temp_account = temp_receipt[[1]][2] %>% 
-            strsplit("Account ")
-          temp_account = temp_account[[1]][2] %>% 
-            strsplit(" Selected")
-          temp_account = temp_account[[1]][1]
-            
-          if (temp_account != "1937") {
-            temp_df$incorrect_accountp[s] = temp_df$incorrect_account[s] + 1
-          }
-
-        }
-        
-      }
-      
-    }
+    # if (temp_task == "3") {
+    #   
+    #   if (nrow(temp_receipts) > 0) {
+    #     
+    #     # method
+    #     if (any(grepl("Average Selected", raw_task_data$tag2))) {
+    #       temp_df$method[s] = "incorrect"
+    #     } 
+    #     
+    #     if (any(grepl("Sum Selected", raw_task_data$tag2))) {
+    #       temp_df$method[s] = "correct"
+    #     }
+    #     
+    #     for (r in 1:nrow(temp_receipts)) {
+    #       
+    #       temp_receipt = temp_receipts$tag2[r] %>% 
+    #         strsplit(", duplicate")
+    #       
+    #       ### correct 
+    #       if (temp_receipt[[1]][1] %in% task3_receipts &
+    #           grepl("false", temp_receipt[[1]][2])) {
+    #         
+    #         temp_df$correct[s] = temp_df$correct[s] + 1
+    #         
+    #       }  else {
+    #         
+    #         ### incorrect
+    #         temp_df$incorrect[s] = temp_df$incorrect[s] + 1
+    #         
+    #         ### incorrect account
+    #         temp_account = temp_receipt[[1]][2] %>% 
+    #           strsplit("Account ")
+    #         temp_account = temp_account[[1]][2] %>% 
+    #           strsplit(" Selected")
+    #         temp_account = temp_account[[1]][1]
+    #         
+    #         if (temp_account != "1937") {
+    #           temp_df$incorrect_accountp[s] = temp_df$incorrect_account[s] + 1
+    #         }
+    #         
+    #       }
+    #       
+    #     }
+    #   }
+    # 
+    # }
+    
+    
+    
+    
+    
+    
+    
     
   }
   
