@@ -6,6 +6,12 @@ df_raw = read_excel("../data/iago/event_clean.xlsx",
   as.data.frame()
 
 # answer key
+
+task1_correct = c(
+  "Receipt: Amount $70, billing: 02-Jul, payment: 09-Jul, filing: 26-Jul",
+  "Receipt: Amount $10, billing: 01-Aug, payment: 09-Aug, filing: 30-Sep"
+)
+
 task3_receipts = c(
   "Receipt: Amount $80, billing: 20-Jun, payment: 13-Aug, filing: 03-Oct",
   "Receipt: Amount $80, billing: 14-Oct, payment: 18-Nov, filing: 10-Dec",
@@ -208,23 +214,44 @@ for (i in 1:n) {
         }
         
       }
+      
+      ## task 1
+      
+      if (temp_task == "1") {
+        
+        # method
+        if (any(grepl("Average Selected", raw_task_data$tag2))) {
+          temp_df$method[s] = "correct"
+        }
+        
+        if (any(grepl("Sum Selected", raw_task_data$tag2))) {
+          temp_df$method[s] = "incorrect"
+        }
+        
+        # receipts
+        for (c in 1:length(temp_receipt_list)) {
+          
+          temp_receipt = temp_receipt_list[c]
+          
+          # correct
+          if (temp_receipt %in% task1_correct) {
+            temp_df$correct[s] = temp_df$correct[s] + 1
+          }
+          
+        }
+        
+      }
     }
     
-   
-    
-    # ## task 1
-    # 
-    # if (temp_task == "1") {
-    #   
-    # }
-    #   
-    # ## task 2
-    # 
-    # if (temp_task == "2") {
-    #     
-    #     
-    # }
-      
+
+
+    ## task 2
+# 
+#     if (temp_task == "2") {
+# 
+# 
+#     }
+#       
     ## task 3
       
     # if (temp_task == "3") {
