@@ -210,15 +210,7 @@ for (i in 1:n) {
       }
     }
     
-    
-    
-    # 
-    # # remove deselected receipts
-    # temp_deselect = temp_receipts %>% 
-    #   filter(select == "Deselected")
-    # for (r in 1:nrow(temp_deselect)) {
-    #   temp_deselect_row = 
-    # }
+   
     
     # ## task 1
     # 
