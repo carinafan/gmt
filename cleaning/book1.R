@@ -12,6 +12,9 @@ task1_correct = c(
   "Receipt: Amount $10, billing: 01-Aug, payment: 09-Aug, filing: 30-Sep"
 )
 
+task1_incorrect_date = 
+  "Receipt: Amount $45, billing: 13-Aug, payment: 09-Oct, filing: 31-Oct"
+
 task3_receipts = c(
   "Receipt: Amount $80, billing: 20-Jun, payment: 13-Aug, filing: 03-Oct",
   "Receipt: Amount $80, billing: 14-Oct, payment: 18-Nov, filing: 10-Dec",
@@ -31,7 +34,6 @@ names = c("user_id",
           "correct",
           "incorrect",
           "incorrect_date",
-          "incorrect_type",
           "incorrect_account",
           "incorrect_duplicate"
           )
@@ -236,6 +238,25 @@ for (i in 1:n) {
           # correct
           if (temp_receipt %in% task1_correct) {
             temp_df$correct[s] = temp_df$correct[s] + 1
+          } else {
+            # incorrect 
+            temp_df$incorrect[s] = temp_df$incorrect[s] + 1
+          }
+          
+          # incorrect date
+          if (temp_receipt %in% task1_incorrect_date) {
+            temp_df$incorrect_date[s] = temp_df$incorrect_date[s] + 1
+          }
+          
+          # incorrect account
+          if (! temp_receipt %in% task1_correct &
+              ! temp_receipt %in% task1_incorrect_date) {
+            temp_df$incorrect_account[s] = temp_df$incorrect_account[s] + 1
+          }
+          
+          # incorrect duplicate
+          if (grepl("duplicate", temp_receipt)) {
+            temp_df$incorrect_duplicate[s] = temp_df$incorrect_duplicate[s] + 1
           }
           
         }
