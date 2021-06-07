@@ -72,14 +72,31 @@ task3_incorrect = c(
   "Receipt: Amount $200, billing: 02-Aug, payment: 02-Sep, filing: 03-Sep",
   "Receipt: Amount $50, billing: 28-Mar, payment: 01-Apr, filing: 10-Apr",
   "Receipt: Amount $100, billing: 15-Apr, payment: 10-May, filing: 10-May",
+  'Receipt: Amount $200, billing: 20-May, payment: 20-Jun, filing: 21-Jun, duplicate',
   "Receipt: Amount $100, billing: 30-Sep, payment: 01-Oct, filing: 02-Oct",
   "Receipt: Amount $113.06, billing: 02-Jan, payment: 13-Feb, filing: 21-Feb",
   "Receipt: Amount $198.17, billing: 10-Jan, payment: 22-Jan, filing: 31-Jan",
+  "Receipt: Amount $50, billing: 28-Mar, payment: 01-Apr, filing: 10-Apr, duplicate",
   "Receipt: Amount $100, billing: 20-Jul, payment: 25-Jul, filing: 01-Aug",
   "Receipt: Amount $200, billing: 03-Dec, payment: 15-Dec, filing: 20-Dec",
   "Receipt: Amount $300, billing: 17-Oct, payment: 02-Nov, filing: 16-Nov",
-  "Receipt: Amount $100, billing: 16-Nov, payment: 30-Nov, filing: 01-Dec"
+  "Receipt: Amount $100, billing: 05-Feb, payment: 15-Feb, filing: 28-Mar, duplicate",
+  "Receipt: Amount $100, billing: 16-Nov, payment: 30-Nov, filing: 01-Dec",
+  "Receipt: Amount $100, billing: 15-Apr, payment: 10-May, filing: 10-May, duplicate"
 )
+
+# task 5
+
+# task5_correct = c(
+#   Receipt: Amount $100, billing: 05-Dec, payment: 16-Dec, filing: 20-Dec 
+#   Receipt: Amount $50, billing: 02-Aug, payment: 25-Aug, filing: 30-Aug 
+#   Receipt: Amount $50, billing: 31-Aug, payment: 12-Sep, filing: 13-Sep
+# )
+# 
+# task5_incorrect = c(
+#   Receipt: Amount $102.05, billing: 02-Sep, payment: 01-Oct, filing: 04-Oct 
+#   Receipt: Amount $130.09, billing: 14-May, payment: 14-Jun, filing: 15-Jun 
+# )
 
 # set column names
 names = c("user_id",
