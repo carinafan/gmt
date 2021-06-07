@@ -409,3 +409,106 @@ for (i in 1:n) {
 }
 
 #---- data dictionary ----
+
+# export column names
+dict = names(df) %>%
+  as.data.frame(stringsAsFactors = FALSE)
+names(dict) = "column_label"
+
+# add columns to describe the variables in each column
+dict$description = NA
+dict$type = NA
+dict$value_range = NA
+
+# fill in dictionary
+for (d in 1:nrow(dict)) {
+  
+  switch(dict$column_label[d],
+         
+         "user_id" = {
+           dict$description[d] = "user ID"
+           dict$type[d] = "ID number"
+           dict$value_range[d] = "NA"
+         },
+         
+         "date" = {
+           dict$description[d] = "date (yyyy-mm-dd hh-mm-ss UTC)"
+           dict$type[d] = "date"
+           dict$value_range[d] = "NA"
+         },
+         
+         "order" = {
+           dict$description[d] = "order in which each task was selected"
+           dict$type[d] = "integer"
+           dict$value_range[d] = "any integer greater than 0"
+         },
+         
+         "task" = {
+           dict$description[d] = "number of task selected"
+           dict$type[d] = "integer"
+           dict$value_range[d] = "1 to 3"
+         },
+         
+         "switch_duration" = {
+           dict$description[d] = "duration between end of last task and start if present task (or in the case of the first task, the beginning of the Bookkeeping Task and the start of the first task within that) in seconds"
+           dict$type[d] = "integer"
+           dict$value_range[d] = "greater than 0"
+         },
+         
+         "duration" = {
+           dict$description[d] = "task duration in seconds"
+           dict$type[d] = "integer"
+           dict$value_range[d] = "greater than 0"
+         },
+         
+         "submitted" = {
+           dict$description[d] = "whether task was submitted or not"
+           dict$type[d] = "factor"
+           dict$value_range[d] = "no (not submitted), correct (submitted and correct), or incorrect (submitted and incorrect)"
+         },
+         
+         "method" = {
+           dict$description[d] = "whether method selected to tally receipts (average or sum) was correcft or not"
+           dict$type[d] = "factor"
+           dict$value_range[d] = "correct or incorrect"
+         },
+         
+         "correct" = {
+           dict$description[d] = "number of correct receipts selected"
+           dict$type[d] = "integer"
+           dict$value_range[d] = "0 or greater"
+         },
+         
+         "incorrect" = {
+           dict$description[d] = "total number of incorrect receipts selected"
+           dict$type[d] = "integer"
+           dict$value_range[d] = "0 or greater"
+         },
+         
+         "incorrect_date" = {
+           dict$description[d] = "number of incorrect receipts selected that had some date overlap with correct receipts"
+           dict$type[d] = "integer"
+           dict$value_range[d] = "0 or greater"
+         },
+         
+         "incorrect_account" = {
+           dict$description[d] = "number of receipts selected from incorrect account"
+           dict$type[d] = "integer"
+           dict$value_range[d] = "0 or greater"
+         },
+         
+         "incorrect_duplicate" = {
+           dict$description[d] = "number of duplicate receipts selected"
+           dict$type[d] = "integer"
+           dict$value_range[d] = "0 or greater"
+         }
+         
+         )
+}
+
+#---- clean up ----
+
+df_book1 = df
+dict_book1 = dict
+
+rm(list = ls()[!(ls() %in% df_to_keep)])
