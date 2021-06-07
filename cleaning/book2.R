@@ -85,7 +85,7 @@ task3_incorrect = c(
   "Receipt: Amount $100, billing: 15-Apr, payment: 10-May, filing: 10-May, duplicate"
 )
 
-# task 5
+## task 5
 
 task5_correct = c(
   "Receipt: Amount $100, billing: 05-Dec, payment: 16-Dec, filing: 20-Dec",
@@ -109,6 +109,30 @@ task5_incorrect = c(
   "Receipt: Amount $130.09, billing: 14-May, payment: 14-Jun, filing: 15-Jun, duplicate",
   "Receipt: Amount $130.09, billing: 14-May, payment: 14-Jun, filing: 15-Jun, duplicate",
   "Receipt: Amount $50, billing: 02-Aug, payment: 25-Aug, filing: 30-Aug, duplicate"
+)
+
+## task 6
+
+task6_incorrect = c(
+  "Receipt: Amount $50, billing: 26-May, payment: 03-Jun, filing: 10-Jun",
+  "Receipt: Amount $100, billing: 07-Sep, payment: 12-Sep, filing: 31-Oct",
+  "Receipt: Amount $50, billing: 03-Apr, payment: 01-May, filing: 02-May",
+  "Receipt: Amount $50, billing: 03-Apr, payment: 01-May, filing: 02-May, duplicate",
+  "Receipt: Amount $50, billing: 05-Jun, payment: 08-Jul, filing: 19-Jul",
+  "Receipt: Amount $100, billing: 01-Mar, payment: 21-Mar, filing: 30-Mar",
+  "Receipt: Amount $121.09, billing: 02-Jan, payment: 02-Feb, filing: 04-Feb",
+  "Receipt: Amount $100, billing: 13-Jul, payment: 13-Aug, filing: 14-Aug",
+  "Receipt: Amount $50, billing: 05-Jun, payment: 08-Jul, filing: 19-Jul, duplicate",
+  "Receipt: Amount $250, billing: 08-Aug, payment: 10-Aug, filing: 15-Aug, duplicate",
+  "Receipt: Amount $100, billing: 01-Mar, payment: 21-Mar, filing: 30-Mar, duplicate",
+  "Receipt: Amount $230.07, billing: 09-Feb, payment: 10-Mar, filing: 12-Mar",
+  "Receipt: Amount $102.5, billing: 02-Sep, payment: 01-Oct, filing: 04-Oct",
+  "Receipt: Amount $250, billing: 08-Aug, payment: 10-Aug, filing: 15-Aug",
+  "Receipt: Amount $50, billing: 26-May, payment: 03-Jun, filing: 10-Jun, duplicate",
+  "Receipt: Amount $230.07, billing: 09-Feb, payment: 10-Mar, filing: 12-Mar, duplicate",
+  "Receipt: Amount $121.09, billing: 02-Jan, payment: 02-Feb, filing: 04-Feb, duplicate",
+  "Receipt: Amount $100, billing: 07-Sep, payment: 12-Sep, filing: 31-Oct, duplicate",
+  "Receipt: Amount $100, billing: 13-Jul, payment: 13-Aug, filing: 14-Aug, duplicate"
 )
 
 # set column names
@@ -526,6 +550,57 @@ for (i in 1:n) {
           }
 
         }
+        
+        ## task 6
+        
+        if (temp_task == "6") {
+
+          # method
+          temp_method = raw_task_data %>%
+            filter(grepl("Sum Selected", tag2)|
+                     grepl("Average Selected", tag2)) %>%
+            tail(1) %>%
+            select(tag2)
+
+          if (grepl("Average", temp_method)) {
+            temp_df$method[s] = "incorrect"
+          }
+
+          if (grepl("Sum", temp_method)) {
+            temp_df$method[s] = "incorrect"
+          }
+
+          # receipts
+          for (c in 1:length(temp_receipt_list)) {
+
+            temp_receipt = temp_receipt_list[c]
+
+              # incorrect
+              temp_df$incorrect[s] = temp_df$incorrect[s] + 1
+
+              # incorrect date
+              if (grepl("Jun", temp_receipt) |
+                  grepl("Jul", temp_receipt) |
+                  grepl("Aug", temp_receipt) |
+                  grepl("Sep", temp_receipt) |
+                  grepl("Oct", temp_receipt) |
+                  grepl("Nov", temp_receipt)) {
+                temp_df$incorrect_date[s] = temp_df$incorrect_date[s] + 1
+              }
+
+              # incorrect account
+              if (! temp_receipt %in% task6_incorrect) {
+                temp_df$incorrect_account[s] = temp_df$incorrect_account[s] + 1
+              }
+
+              # incorrect duplicate
+              if (grepl("duplicate", temp_receipt)) {
+                temp_df$incorrect_duplicate[s] = temp_df$incorrect_duplicate[s] + 1
+              }
+
+            }
+
+          }
         
       }
       
