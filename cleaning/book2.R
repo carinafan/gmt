@@ -225,9 +225,9 @@ for (i in 1:n) {
       select(tag2) %>% 
       filter(!grepl("Submitted", tag2))
     
+    temp_receipt_list = vector(mode = "character")
+    
     if (nrow(temp_receipt_df > 0)) {
-      
-      temp_receipt_list = vector(mode = "character")
       
       for (r in 1:nrow(temp_receipt_df)) {
         
@@ -447,10 +447,24 @@ for (i in 1:n) {
       
     }
     
+    ## task 4
+    
+    if (identical(temp_receipt_list, character(0)) &
+        temp_task == "4") {
+      
+      if (grepl("Selecting Account 'No Account' for Task 4", raw_task_data$tag2) %>% any()) {
+        temp_df$submitted[s] = "correct"
+      }
+      
+    }
+    
   }
   
   # append participant dataframe to overall dataframe
   df %<>% rbind(temp_df)
+  
+  # remove temp stuff
+  rm( list = ls()[ ( grepl("temp", ls()) ) ] ) 
   
 }
 
