@@ -1,12 +1,13 @@
 GMT Online Games – Data Cleaning
 ================
-Last updated: May 31, 2021
+Last updated: June 07, 2021
 
 -   [Fruit Clapping Tasks](#fruit-clapping-tasks)
 -   [Card Sorting Tasks](#card-sorting-tasks)
 -   [Complex Tasks](#complex-tasks)
     -   [Complex 2 Dot to Dot scoring
         issue](#complex-2-dot-to-dot-scoring-issue)
+-   [Bookkeeping Tasks](#bookkeeping-tasks)
 -   [Export data](#export-data)
 -   [Session info](#session-info)
 
@@ -59,7 +60,8 @@ df_to_keep = c(
   "df_card4", "dict_card4",
   "df_complex1", "dict_complex1", "df_complex1_summary", "dict_complex1_summary",
   "df_complex2", "dict_complex2", "df_complex2_summary", "dict_complex2_summary",
-  "df_complex3", "dict_complex3", "df_complex3_summary", "dict_complex3_summary"
+  "df_complex3", "dict_complex3", "df_complex3_summary", "dict_complex3_summary",
+  "df_book1", "dict_book1"
 )
 ```
 
@@ -129,6 +131,14 @@ will be blank.
 
 <!-- ======================================================================= -->
 
+# Bookkeeping Tasks
+
+``` r
+source("book1.R")
+```
+
+<!-- ======================================================================= -->
+
 # Export data
 
 ``` r
@@ -142,7 +152,8 @@ list(fruit1 = df_fruit1,
      card4 = df_card4,
      complex1 = df_complex1, complex1_summary = df_complex1_summary,
      complex2 = df_complex2, complex2_summary = df_complex2_summary,
-     complex3 = df_complex3, complex3_summary = df_complex3_summary) %>%
+     complex3 = df_complex3, complex3_summary = df_complex3_summary,
+     book1 = df_book1) %>%
   write_xlsx("../data/gmt_clean.xlsx")
 ```
 
@@ -157,7 +168,8 @@ list(fruit1 = dict_fruit1,
      card4 = dict_card4,
      complex1 = dict_complex1, complex1_summary = dict_complex1_summary,
      complex2 = dict_complex2, complex2_summary = dict_complex2_summary,
-     complex3 = dict_complex3, complex3_summary = dict_complex3_summary) %>%
+     complex3 = dict_complex3, complex3_summary = dict_complex3_summary,
+     book1 = dict_book1) %>%
   write_xlsx("../data/gmt_dictionary.xlsx")
 ```
 
