@@ -61,7 +61,8 @@ df_to_keep = c(
   "df_complex1", "dict_complex1", "df_complex1_summary", "dict_complex1_summary",
   "df_complex2", "dict_complex2", "df_complex2_summary", "dict_complex2_summary",
   "df_complex3", "dict_complex3", "df_complex3_summary", "dict_complex3_summary",
-  "df_book1", "dict_book1"
+  "df_book1", "dict_book1",
+  "df_book2", "dict_book2"
 )
 ```
 
@@ -135,6 +136,7 @@ will be blank.
 
 ``` r
 source("book1.R")
+source("book2.R")
 ```
 
 <!-- ======================================================================= -->
@@ -153,7 +155,8 @@ list(fruit1 = df_fruit1,
      complex1 = df_complex1, complex1_summary = df_complex1_summary,
      complex2 = df_complex2, complex2_summary = df_complex2_summary,
      complex3 = df_complex3, complex3_summary = df_complex3_summary,
-     book1 = df_book1) %>%
+     book1 = df_book1,
+     book2 = df_book2) %>%
   write_xlsx("../data/gmt_clean.xlsx")
 ```
 
@@ -169,7 +172,8 @@ list(fruit1 = dict_fruit1,
      complex1 = dict_complex1, complex1_summary = dict_complex1_summary,
      complex2 = dict_complex2, complex2_summary = dict_complex2_summary,
      complex3 = dict_complex3, complex3_summary = dict_complex3_summary,
-     book1 = dict_book1) %>%
+     book1 = dict_book1,
+     book2 = dict_book2) %>%
   write_xlsx("../data/gmt_dictionary.xlsx")
 ```
 
