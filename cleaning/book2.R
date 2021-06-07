@@ -40,7 +40,7 @@ task2_correct = c(
   "Receipt: Amount $50, billing: 30-Apr, payment: 14-May, filing: 19-May",
   "Receipt: Amount $100, billing: 08-May, payment: 30-May, filing: 10-Jun",
   "Receipt: Amount $50, billing: 10-Apr, payment: 29-Apr, filing: 01-May",
-  "Receipt: Amount $200, billing: 04-May, payment: 28-May, filing: 31-May "
+  "Receipt: Amount $200, billing: 04-May, payment: 28-May, filing: 31-May"
 )
 
 task2_incorrect = c(
@@ -54,8 +54,8 @@ task2_incorrect = c(
   "Receipt: Amount $212.5, billing: 03-Dec, payment: 18-Dec, filing: 19-Dec",
   "Receipt: Amount $300.15, billing: 17-Nov, payment: 16-Dec, filing: 20-Dec",
   "Receipt: Amount $200.04, billing: 18-Feb, payment: 28-Feb, filing: 04-Mar",
-  "Receipt: Amount $150.09, billing: 09-Sep, payment: 08-Oct, filing: 12-Oct ",
-  "Receipt: Amount $200.78, billing: 22-Mar, payment: 24-Mar, filing: 01-Apr ",
+  "Receipt: Amount $150.09, billing: 09-Sep, payment: 08-Oct, filing: 12-Oct",
+  "Receipt: Amount $200.78, billing: 22-Mar, payment: 24-Mar, filing: 01-Apr",
   "Receipt: Amount $190.06, billing: 6-Jul, payment: 19-Jul, filing: 20-Jul"
 )
 
