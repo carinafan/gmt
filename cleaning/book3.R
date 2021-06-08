@@ -851,7 +851,7 @@ for (d in 1:nrow(dict)) {
 
 #---- clean up ----
 
-df_book2 = df
-dict_book2 = dict
+df_book3 = df
+dict_book3 = dict
 
 rm(list = ls()[!(ls() %in% df_to_keep)])
