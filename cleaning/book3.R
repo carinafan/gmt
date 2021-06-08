@@ -31,6 +31,44 @@ task1_incorrect = c(
   "Receipt: Amount $230.07, billing: 09-Feb, payment: 10-Mar, filing: 12-Mar, duplicate"
 )
 
+## task 2
+
+task2_correct = c(
+  "Receipt: Amount $50, billing: 01-Apr, payment: 29-Apr, filing: 01-May",
+  "Receipt: Amount $200, billing: 04-May, payment: 28-May, filing: 31-May",
+  "Receipt: Amount $100, billing: 08-May, payment: 30-May, filing: 10-Jun",
+  "Receipt: Amount $211.86, billing: 20-Apr, payment: 30-Apr, filing: 05-May",
+  "Receipt: Amount $164.4, billing: 16-May, payment: 20-May, filing: 10-Jun",
+  "Receipt: Amount $200.1, billing: 04-Apr, payment: 29-Apr, filing: 12-May"
+)
+
+task2_incorrect = c(
+  "Receipt: Amount $144.64, billing: 31-Mar, payment: 21-Feb, filing: 23-Feb",
+  "Receipt: Amount $100, billing: 13-Jun, payment: 13-Aug, filing: 14-Aug",
+  "Receipt: Amount $177.77, billing: 10-Jun, payment: 01-Jul, filing: 08-Jul",
+  "Receipt: Amount $200.04, billing: 18-Feb, payment: 28-Feb, filing: 04-Mar",
+  "Receipt: Amount $189.9, billing: 11-Oct, payment: 31-Oct, filing: 31-Oct",
+  "Receipt: Amount $50, billing: 05-Jun, payment: 08-Jul, filing: 19-Jul",
+  "Receipt: Amount $330.56, billing: 16-Nov, payment: 23-Nov, filing: 28-Nov",
+  "Receipt: Amount $198.52, billing: 11-Jul, payment: 12-Aug, filing: 20-Aug",
+  "Receipt: Amount $200.78, billing: 22-Mar, payment: 24-Mar, filing: 01-Apr",
+  "Receipt: Amount $190.06, billing: 06-Jul, payment: 09-Jul, filing: 20-Jul",
+  "Receipt: Amount $125.8, billing: 10-Jan, payment: 02-Feb, filing: 12-Feb",
+  "Receipt: Amount $231.35, billing: 24-Aug, payment: 28-Aug, filing: 29-Aug",
+  "Receipt: Amount $150.09, billing: 09-Sep, payment: 08-Oct, filing: 12-Oct",
+  "Receipt: Amount $300.15, billing: 17-Nov, payment: 16-Dec, filing: 20-Dec",
+  "Receipt: Amount $212.5, billing: 03-Dec, payment: 18-Dec, filing: 19-Dec",
+  "Receipt: Amount $60, billing: 01-Feb, payment: 10-Feb, filing: 24-Feb",
+  "Receipt: Amount $100, billing: 10-Nov, payment: 10-Dec, filing: 15-Dec",
+  "Receipt: Amount $45, billing: 28-Sep, payment: 10-Oct, filing: 30-Oct",
+  "Receipt: Amount $99.5, billing: 06-Feb, payment: 09-Feb, filing: 30-Feb",
+  "Receipt: Amount $74.29, billing: 05-Mar, payment: 08-Mar, filing: 30-Mar",
+  "Receipt: Amount $166.21, billing: 29-May, payment: 15-Jun, filing: 20-Jun",
+  "Receipt: Amount $123.22, billing: 22-Nov, payment: 30-Dec, filing: 20-Jan",
+  "Receipt: Amount $78.89, billing: 16-Jul, payment: 05-Aug, filing: 07-Aug",
+  "Receipt: Amount $50, billing: 28-May, payment: 10-Jun, filing: 18-Jun"
+)
+
 # set column names
 names = c("user_id",
           "date",
@@ -243,7 +281,7 @@ for (i in 1:n) {
           }
 
           if (grepl("Sum", temp_method)) {
-            temp_df$method[s] = "correct"
+            temp_df$method[s] = "incorrect"
           }
 
           # receipts
@@ -273,59 +311,59 @@ for (i in 1:n) {
 
         }
 
-      #   ## task 2
-      #   
-      #   if (temp_task == "2") {
-      #     
-      #     # method
-      #     temp_method = raw_task_data %>% 
-      #       filter(grepl("Sum Selected", tag2)|
-      #                grepl("Average Selected", tag2)) %>%
-      #       tail(1) %>% 
-      #       select(tag2)
-      #     
-      #     if (grepl("Average", temp_method)) {
-      #       temp_df$method[s] = "correct"
-      #     } 
-      #     
-      #     if (grepl("Sum", temp_method)) {
-      #       temp_df$method[s] = "incorrect"
-      #     }
-      #     
-      #     # receipts
-      #     for (c in 1:length(temp_receipt_list)) {
-      #       
-      #       temp_receipt = temp_receipt_list[c]
-      #       
-      #       # correct
-      #       if (temp_receipt %in% task2_correct) {
-      #         temp_df$correct[s] = temp_df$correct[s] + 1
-      #       } else {
-      #         # incorrect 
-      #         temp_df$incorrect[s] = temp_df$incorrect[s] + 1
-      #         
-      #         # incorrect date
-      #         if (grepl("Apr", temp_receipt) |
-      #             grepl("May", temp_receipt)) {
-      #           temp_df$incorrect_date[s] = temp_df$incorrect_date[s] + 1
-      #         }
-      #         
-      #         # incorrect account
-      #         if (! temp_receipt %in% task2_correct &
-      #             ! temp_receipt %in% task2_incorrect) {
-      #           temp_df$incorrect_account[s] = temp_df$incorrect_account[s] + 1
-      #         }
-      #         
-      #         # incorrect duplicate
-      #         if (grepl("duplicate", temp_receipt)) {
-      #           temp_df$incorrect_duplicate[s] = temp_df$incorrect_duplicate[s] + 1
-      #         }
-      #         
-      #       }
-      #       
-      #     }
-      #     
-      #   }
+        ## task 2
+
+        if (temp_task == "2") {
+
+          # method
+          temp_method = raw_task_data %>%
+            filter(grepl("Sum Selected", tag2)|
+                     grepl("Average Selected", tag2)) %>%
+            tail(1) %>%
+            select(tag2)
+
+          if (grepl("Average", temp_method)) {
+            temp_df$method[s] = "incorrect"
+          }
+
+          if (grepl("Sum", temp_method)) {
+            temp_df$method[s] = "correct"
+          }
+
+          # receipts
+          for (c in 1:length(temp_receipt_list)) {
+
+            temp_receipt = temp_receipt_list[c]
+
+            # correct
+            if (temp_receipt %in% task2_correct) {
+              temp_df$correct[s] = temp_df$correct[s] + 1
+            } else {
+              # incorrect
+              temp_df$incorrect[s] = temp_df$incorrect[s] + 1
+
+              # incorrect date
+              if (grepl("Apr", temp_receipt) |
+                  grepl("May", temp_receipt)) {
+                temp_df$incorrect_date[s] = temp_df$incorrect_date[s] + 1
+              }
+
+              # incorrect account
+              if (! temp_receipt %in% task2_correct &
+                  ! temp_receipt %in% task2_incorrect) {
+                temp_df$incorrect_account[s] = temp_df$incorrect_account[s] + 1
+              }
+
+              # incorrect duplicate
+              if (grepl("duplicate", temp_receipt)) {
+                temp_df$incorrect_duplicate[s] = temp_df$incorrect_duplicate[s] + 1
+              }
+
+            }
+
+          }
+
+        }
       #   
       #   ## task 3
       #   
