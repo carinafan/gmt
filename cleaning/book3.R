@@ -650,6 +650,11 @@ for (i in 1:n) {
           for (c in 1:length(temp_receipt_list)) {
 
             temp_receipt = temp_receipt_list[c]
+            
+            # correct
+            if (temp_receipt %in% task7_correct) {
+              temp_df$correct[s] = temp_df$correct[s] + 1
+            } else {
 
               # incorrect
               temp_df$incorrect[s] = temp_df$incorrect[s] + 1
@@ -675,6 +680,8 @@ for (i in 1:n) {
               }
 
             }
+            
+          }
 
         }
       
@@ -701,6 +708,11 @@ for (i in 1:n) {
         for (c in 1:length(temp_receipt_list)) {
           
           temp_receipt = temp_receipt_list[c]
+          
+          # correct
+          if (temp_receipt %in% task7_correct) {
+            temp_df$correct[s] = temp_df$correct[s] + 1
+          } else {
           
           # incorrect
           temp_df$incorrect[s] = temp_df$incorrect[s] + 1
@@ -739,6 +751,8 @@ for (i in 1:n) {
         temp_df$submitted[s] = "correct"
       }
 
+    }
+    
     }
     
   }
