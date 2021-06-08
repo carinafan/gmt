@@ -497,6 +497,48 @@ for (i in 1:n) {
           
         }
         
+        ## task 4
+        
+        if (temp_task == "4") {
+          
+          # method
+          temp_method = raw_task_data %>%
+            filter(grepl("Sum Selected", tag2)|
+                     grepl("Average Selected", tag2)) %>%
+            tail(1) %>%
+            select(tag2)
+          
+          if (grepl("Average", temp_method)) {
+            temp_df$method[s] = "incorrect"
+          }
+          
+          if (grepl("Sum", temp_method)) {
+            temp_df$method[s] = "correct"
+          }
+          
+          # receipts
+          for (c in 1:length(temp_receipt_list)) {
+            
+            temp_receipt = temp_receipt_list[c]
+            
+            # incorrect
+            temp_df$incorrect[s] = temp_df$incorrect[s] + 1
+            
+            # incorrect date
+            temp_df$incorrect_date[s] = temp_df$incorrect_date[s] + 1
+            
+            # incorrect account
+            temp_df$incorrect_account[s] = temp_df$incorrect_account[s] + 1
+            
+            # incorrect duplicate
+            if (grepl("duplicate", temp_receipt)) {
+              temp_df$incorrect_duplicate[s] = temp_df$incorrect_duplicate[s] + 1
+            }
+            
+          }
+          
+        }
+        
         ## task 5
         
         if (temp_task == "5") {
