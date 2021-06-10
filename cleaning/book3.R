@@ -652,7 +652,7 @@ for (i in 1:n) {
             temp_receipt = temp_receipt_list[c]
             
             # correct
-            if (temp_receipt %in% task7_correct) {
+            if (temp_receipt %in% task6_correct) {
               temp_df$correct[s] = temp_df$correct[s] + 1
             } else {
 
