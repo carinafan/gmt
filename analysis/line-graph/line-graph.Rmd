@@ -31,10 +31,6 @@ df.cfq = df %>%
   melt(id = "Study_ID")
 
 names(df.cfq) = c("id", "time", "cfq")
-
-mean1 = df$CFQ_Total_PreTest %>% mean()
-mean2 = df$CFQ_Total_PostTest1 %>% mean()
-mean3 = df$CFQ_Total_PostTest2 %>% mean()
 ```
 
 ```{r line_plot_cfq}
