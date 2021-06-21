@@ -1,0 +1,64 @@
+---
+title: "GMT data analysis: line graph example"
+date: "Last updated: `r format(Sys.time(), '%B %d, %Y')`"
+output: 
+  github_document:
+    toc: true
+---
+
+
+```{r packages}
+library(readxl)
+library(reshape2)
+library(magrittr)
+library(tidyverse)
+```
+
+```{r data}
+df = read_excel("../../data/iago/GMT_LineGraphs.xlsm") %>% 
+  as.data.frame()
+```
+
+
+<!-- ======================================================================= -->
+
+
+# CFQ
+
+```{r}
+df.cfq = df %>% 
+  select("Study_ID", "CFQ_Total_PreTest", "CFQ_Total_PostTest1", "CFQ_Total_PostTest2") %>% 
+  melt(id = "Study_ID")
+
+names(df.cfq) = c("id", "time", "cfq")
+
+mean1 = df$CFQ_Total_PreTest %>% mean()
+mean2 = df$CFQ_Total_PostTest1 %>% mean()
+mean3 = df$CFQ_Total_PostTest2 %>% mean()
+```
+
+```{r line_plot_cfq}
+df.cfq %>% 
+  ggplot(aes(x = time, y = cfq, group = id)) +
+  geom_line(alpha = .4, colour = "dodgerblue2") +
+  labs(x = NULL, y = "CFQ score") +
+  stat_summary(group = 1, fun = mean, geom = "line",
+               size = 1.5, colour = "dodgerblue4") + # line for mean
+  stat_summary(group = 1, fun = mean, geom = "point",
+               size = 3, colour = "dodgerblue4") + # points for mean
+  scale_x_discrete(labels = c("CFQ_Total_PreTest" = "Baseline",
+                              "CFQ_Total_PostTest1" = "Post-test 1",
+                              "CFQ_Total_PostTest2" = "Post-test 2"),
+                   expand = c(.05, .05)) + # adjust amount of white space on left and right
+  theme_bw() # black and white theme 
+```
+
+
+<!-- ======================================================================= -->
+
+
+# Session info
+
+```{r session_info, include = TRUE}
+sessionInfo()
+```
